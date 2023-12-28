@@ -1,0 +1,137 @@
+name: ci
+
+# change this to pull request when finished editing
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20.9.0'
+          cache: 'npm'
+
+      - name: 'Install Necessary Dependencies'
+        run: npm ci
+
+      - name: 'Lint Code'
+        run: npm run lint
+    continue-on-error: true
+
+  unit-tests:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20.9.0'
+          cache: 'npm'
+
+      - name: 'Install necessary dependencies'
+        run: npm ci
+
+      - name: 'Run unit tests'
+        run: npm run test:unit-testing-ci
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
+
+  deployment:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./.github/scripts
+    outputs:
+      isDeployed: ${{ steps.polling.outputs.isDeployed }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20.9.0'
+          cache: 'npm'
+
+      - name: Install Necessary Dependencies
+        run: |
+          npm i -g @railway/cli
+
+      # - name: Deploy
+      #   run: RAILWAY_TOKEN=$RAILWAY_TOKEN railway up --service back-end
+      #   env:
+      #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      # Poll the deployment status
+      - name: Poll Deployment Status
+        id: polling
+        run: |
+          export AUTH_SECRET="${{ secrets.AUTH_SECRET }}"
+          export SERVER_URL="${{ secrets.SERVER_URL }}"
+          export RAILWAY_TOKEN="${{ secrets.RAILWAY_TOKEN }}"
+          export NAME="${{ github.event.sender.name }}"
+          ./try-bash.sh
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          NAME: ${{ github.event.sender.name }}
+        continue-on-error: false
+
+  back-end-e2e-testing:
+    needs: deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.9.0'
+          cache: 'npm'
+
+      - name: 'Install necessary dependencies'
+        run: |
+          npm i -g ts-node 
+          npm ci
+
+      - name: 'Run database connection test'
+        run: |
+          npm run test:e2e-testing-ci
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
+
+  front-end-e2e-testing:
+    needs: back-end-e2e-testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code including Submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.G_ACCESS }}
+
+      - name: Update Submodules to Latest Remote Commit
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote --recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.9.0'
+          cache: 'npm'
+
+      - name: 'Install Frontend Dependencies'
+        run: |
+          cd ./.github/front-end  # Navigate to your frontend directory
+          npm ci   # Install dependencies
+
+      - name: Run tests (preferably e2e tests/integration)
+        run: |
+          cd ./.github/front-end  # Navigate to your frontend directory
+          npm run test

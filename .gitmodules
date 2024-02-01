@@ -1,3 +1,0 @@
-[submodule ".github/front-end"]
-	path = .github/front-end
-	url = git@github.com:elclanguageproject/front-end.git

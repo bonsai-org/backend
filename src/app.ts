@@ -6,6 +6,4 @@ app.get('*', (req, res) => {
   res.send('You have arrived at the node server');
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
+export default app

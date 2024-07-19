@@ -10,3 +10,21 @@ export interface IUser {
     bonsai: Types.ObjectId[];
     UUID: Types.UUID;
 }
+
+export interface Bonsai {
+    user: Types.ObjectId;
+    bonsaiChapters: Types.ObjectId[];
+    hardiness_zone: string;
+    height: number;
+    width: number;
+    nebari: number;
+    style: string;
+    species: string;
+}
+
+export interface BonsaiChapter {
+    photoUrls: string[];
+    bonsai: Types.ObjectId;
+    date: Date;
+    caption: string;
+}

@@ -1,11 +1,14 @@
+import EnvironmentVariables from './bin/environment-variables'
 import Express from 'express';
+import morgan from 'morgan';
 const app = Express();
-const PORT = process.env.PORT || 3000;
+
+if (EnvironmentVariables.NODE_ENV === 'dev') {
+  app.use(morgan('dev'))
+}
 
 app.get('*', (req, res) => {
   res.send('You have arrived at the node server');
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
+export default app;

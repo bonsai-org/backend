@@ -1,13 +1,18 @@
-import process from 'process'
-import app from '../app'
+import './environment-variables'; // load environment variables synchronously
+import './server' // starts server, also synchronous 
+import process from 'process';
+import connectMongo from './mongodb';
+import shutdownApplication from './shutdown';
 
 async function main(): Promise<void> {
-    try {
-        app.listen(80, () => {
-            console.log(`[LISTENING] on port ${} `)
-        })
-    } catch (error) {
-        console.error(error)
-        process.exit(1)
-    }
+  try {
+    await connectMongo();
+  } catch (error) {
+    console.error(error);
+    shutdownApplication()
+  }
 }
+
+process.on('SIGTERM', shutdownApplication)
+
+main()

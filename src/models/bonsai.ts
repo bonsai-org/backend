@@ -1,8 +1,10 @@
-import {Schema, model, Types} from 'mongoose';
+import {Schema, model} from 'mongoose';
+
+const Types = Schema.Types;
 
 interface Bonsai {
-    user: Types.ObjectId;
-    bonsaiChapters: Types.ObjectId[];
+    user: Schema.Types.ObjectId;
+    bonsaiChapters: Schema.Types.ObjectId[];
     hardiness_zone: string;
     height: number;
     width: number;

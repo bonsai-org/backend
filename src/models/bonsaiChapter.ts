@@ -1,8 +1,8 @@
-import {Schema, model, Types} from 'mongoose';
+import {Schema, model} from 'mongoose';
 
 interface BonsaiChapter {
     photoUrl: string[];
-    bonsai: Types.ObjectId;
+    bonsai: Schema.Types.ObjectId;
     date: Date;
     caption: string;
 }

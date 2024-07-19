@@ -7,7 +7,6 @@ interface BonsaiChapter {
     caption: string;
 }
 
-
 const BonsaiChapterSchema = new Schema<BonsaiChapter>({
     photoUrl: [{ type: String, maxLength: 200, required: true }],
     bonsai: { type: Schema.Types.ObjectId, ref: "Bonsai", required: true },

@@ -1,7 +1,5 @@
 import {Schema, model} from 'mongoose';
 
-const Types = Schema.Types;
-
 interface Bonsai {
     user: Schema.Types.ObjectId;
     bonsaiChapters: Schema.Types.ObjectId[];

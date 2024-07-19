@@ -1,3 +1,5 @@
+import { Types } from "mongoose"
+
 export interface IUser {
     username: string;
     password: string;
@@ -5,5 +7,6 @@ export interface IUser {
     salt: string;
     profilePhoto?: string;
     bio?: string;
-    bonsai: string;
+    bonsai: Types.ObjectId[];
+    UUID: Types.UUID;
 }

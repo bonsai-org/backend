@@ -17,7 +17,7 @@ app.use('/api/bonsai', router);
 app.get('*', (req, res) => {
   res.json({
     message: 'Catchall: No endpoint exists for this path.',
-    statusCode: 500,
+    statusCode: 404,
   });
 });
 

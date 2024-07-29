@@ -1,5 +1,7 @@
 type NodeEnvironments = 'prod' | 'dev' | 'stage'
 
+export type LogLevels = 'Info' | 'Warn' | 'Error' | 'Fatal'
+
 export enum MongooseEvents {
   CONNECTING = 'connecting',
   CONNECTED = 'connected',
@@ -9,13 +11,6 @@ export enum MongooseEvents {
   CLOSE = 'close',
   RECONNECTED = 'reconnected',
   ERROR = 'error',
-}
-
-export enum LogLevels {
-  INFO = 'Info',
-  WARN = 'Warn',
-  ERROR = 'Error',
-  FATAL = 'Fatal'
 }
 
 export type EnvironmentVariables = {

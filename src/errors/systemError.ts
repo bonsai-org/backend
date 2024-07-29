@@ -19,7 +19,7 @@ export class CriticalError extends BaseError<ErrorName> {
       name,
       message,
       stack,
-      level: LogLevels.FATAL
+      level: 'Fatal'
     })
   }
 }

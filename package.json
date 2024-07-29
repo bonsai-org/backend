@@ -5,7 +5,7 @@
   "main": "./src/bin/main.ts",
   "type": "commonjs",
   "engines": {
-    "node": "22.x.x"
+    "node": "20.16.0"
   },
   "scripts": {
     "test": "jest",

@@ -1,6 +1,6 @@
 import { MongooseEvents } from '../types'
 import envVariables from './environment-variables'
-import { CriticalError } from './error';
+import { CriticalError } from '../errors/systemError';
 import mongoose from 'mongoose';
 import shutdownApplication from './shutdown';
 

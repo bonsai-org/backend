@@ -1,5 +1,5 @@
 import { EnvironmentVariables } from '../types';
-import { CriticalError } from './error';
+import { CriticalError } from '../errors/systemError';
 import { join } from 'path';
 import { config } from 'dotenv';
 import Joi from 'joi';

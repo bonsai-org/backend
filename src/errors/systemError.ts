@@ -1,4 +1,4 @@
-import { BaseError } from '../errors/baseError';
+import { BaseError } from './baseError';
 import { LogLevels } from '../types'
 
 type ErrorName =

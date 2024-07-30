@@ -1,3 +1,5 @@
+import { IUser } from './schemas'
+
 type NodeEnvironments = 'prod' | 'dev' | 'stage'
 
 export type LogLevels = 'Info' | 'Warn' | 'Error' | 'Fatal'
@@ -89,4 +91,63 @@ export enum HttpStatusCode {
   LoopDetected = 508,
   NotExtended = 510,
   NetworkAuthenticationRequired = 511,
+}
+
+export enum JoiErrorTypes {
+  StringBase = 'string.base',
+  StringAlphanum = 'string.alphanum',
+  StringEmpty = 'string.empty',
+  StringMin = 'string.min',
+  StringMax = 'string.max',
+  StringPatternBase = 'string.pattern.base',
+  StringEmail = 'string.email',
+  AnyRequired = 'any.required',
+  AnyInvalid = 'any.invalid',
+  AnyOnly = 'any.only',
+  AnyEmpty = 'any.empty',
+  NumberBase = 'number.base',
+  NumberMin = 'number.min',
+  NumberMax = 'number.max',
+  NumberInteger = 'number.integer',
+  NumberPositive = 'number.positive',
+  NumberNegative = 'number.negative',
+  NumberPrecision = 'number.precision',
+  ArrayBase = 'array.base',
+  ArrayMin = 'array.min',
+  ArrayMax = 'array.max',
+  ArrayLength = 'array.length',
+  ArrayIncludes = 'array.includes',
+  ArrayExcludes = 'array.excludes',
+  ObjectBase = 'object.base',
+  ObjectUnknown = 'object.unknown',
+  ObjectMissing = 'object.missing',
+  ObjectAnd = 'object.and',
+  ObjectNand = 'object.nand',
+  ObjectOr = 'object.or',
+  ObjectXor = 'object.xor',
+  ObjectWith = 'object.with',
+  ObjectWithout = 'object.without'
+}
+
+export type validationErrorResponse = {
+  [index: string]: string
+}
+
+export enum FormFields {
+  USERNAME = 'username',
+  EMAIL = 'email',
+  PASSWORD = 'password',
+  CONFIRM_PASSWORD = 'confirmPassword',
+}
+
+export type UserQuery = {
+  user: IUser | null,
+  error: unknown
+}
+
+export type SignUpRequest = {
+  username: string,
+  password: string,
+  email: string,
+  confirmPassword?: string,
 }

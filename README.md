@@ -31,7 +31,7 @@ npm run dev
 
 ## Henry Todo 
 
-- [  ] Implement Login
-- [  ] Implement Auth/JWTs 
-- [  ] Add comments to code 
-- [  ] Clean up stuff
+- [ ] Implement Login
+- [ ] Implement Auth/JWTs 
+- [ ] Add comments to code 
+- [ ] Clean up stuff

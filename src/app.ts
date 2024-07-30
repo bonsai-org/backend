@@ -1,3 +1,4 @@
+/// <reference types="./types/express.d.ts" />
 import EnvironmentVariables from './bin/environment-variables';
 import Express from 'express';
 import morgan from 'morgan';
@@ -9,6 +10,7 @@ const app = Express();
 app.use(Express.json());
 if (EnvironmentVariables.NODE_ENV === 'dev') {
   app.use(morgan('dev'));
+  app.use(Express.urlencoded({ extended: true }))
 }
 
 app.use('/api/user', userRouter);

@@ -1,10 +1,9 @@
-import envVariables from './environment-variables'
 import app from '../app'
 
-const server = app.listen(envVariables.PORT)
+const server = app.listen(process.env.PORT)
 
 server.on('listening', () => {
-    console.log(`[LISTENING] on port ${envVariables.PORT}`)
+    console.log(`[LISTENING] on port ${process.env.PORT}`)
 })
 
 server.on('error', (err) => {

@@ -35,3 +35,4 @@ npm run dev
 - [ ] Implement Auth/JWTs 
 - [ ] Add comments to code 
 - [ ] Clean up stuff
+- [ ] Extract logic of formulating client responses into one or more standardized formats 

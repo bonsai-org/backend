@@ -1,0 +1,29 @@
+/// <reference types="../types/express.d.ts" />
+
+Problems that I found tentative solutions for, but are still likely to have better implementations/ways of solving them 
+
+1. Not being able to merge custom express types into express, etc. 
+
+2. Environment variable loading? Should I extend the process.env interface to 
+allow for all of my environment variables and then only call validate in top-level main function? 
+
+3. How do I actually test my application and its endpoints in a contained environment?
+    - Compose file may be wise choice
+
+
+
+What Nick wants
+
+- Signup a new user
+- One for login 
+    - Give 400 for invalid and 200 for valid. No message required 
+- Create a bonsai 
+    - 400 or 200
+- Being able to read a bonsai, say something with id 1. 
+
+Create for User and Bonsai, and read for Bonsai
+
+
+3 endpoints
+Let's get it online 
+Tell nick where it is 

@@ -6,3 +6,4 @@ dist
 !.env.project
 !.env.vault
 .vscode
+nodemon.json

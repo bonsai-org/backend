@@ -1,4 +1,5 @@
-import EnvironmentVariables from './bin/environment-variables';
+/// <reference types="./types/express.d.ts" />
+/// <reference types="./types/environment.d.ts" />
 import Express from 'express';
 import morgan from 'morgan';
 import userRouter from './routes/user';
@@ -7,8 +8,9 @@ import router from './routes/bonsai';
 const app = Express();
 
 app.use(Express.json());
-if (EnvironmentVariables.NODE_ENV === 'dev') {
+if (process.env.NODE_ENV === 'dev') {
   app.use(morgan('dev'));
+  app.use(Express.urlencoded({ extended: true }))
 }
 
 app.use('/api/user', userRouter);

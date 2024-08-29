@@ -7,8 +7,8 @@ export interface IUser {
     salt: string;
     profilePhoto?: string;
     bio?: string;
-    bonsai: Types.ObjectId[];
-    UUID: Types.UUID;
+    bonsai?: Types.ObjectId[];
+    UUID: string;
 }
 
 export interface Bonsai {

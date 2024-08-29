@@ -1,39 +1,40 @@
-import { EnvironmentVariables } from '../types';
-import { CriticalError } from './error';
+import process from 'process'
+import { EnvironmentVariables, UserQuery } from '../types';
+import { CriticalError } from '../errors/systemError';
 import { join } from 'path';
 import { config } from 'dotenv';
+import { formatMissingEnvVariables } from '../utils/joi'
 import Joi from 'joi';
 
 const envVarsSchema = Joi.object<EnvironmentVariables>({
   MONGO_DB_STRING: Joi.string().uri().required(),
   PORT: Joi.number().required(),
-  NODE_ENV: Joi.string().required()
+  NODE_ENV: Joi.string().valid('prod', 'dev', 'stage', 'local').required()
 }).unknown();
 
 function loadDotenv() {
   config({ path: join(__dirname, '../../.env') });
 }
 
-function formatMissingVariables(errorDetails: Joi.ValidationErrorItem[]) {
-  return errorDetails.map((errorEntry) => errorEntry.path.join(',')).join(', ');
-}
-
-function loadEnvironment(): EnvironmentVariables {
-  if (process.env.NODE_ENV === undefined) {
-    loadDotenv();
-  }
-  const { error, value } = envVarsSchema.validate(process.env, {
+function validateEnvironmentVariables() {
+  let { error, value } = envVarsSchema.validate(process.env, {
     abortEarly: false,
-  });
-  if (error instanceof Joi.ValidationError) {
+  })
+  if (error) {
     throw new CriticalError({
       name: 'MISSING_ENVIRONMENT_VARIABLES',
-      message: `Missing the following environment variables: ${formatMissingVariables(error.details)}`,
+      message: `Missing the following environment variables: ${formatMissingEnvVariables(error.details)}`,
+      stack: error,
     });
   }
-  return value;
 }
 
-const envVariables = loadEnvironment();
+function loadEnvironment() {
+  if (process.env.NODE_ENV === 'local') {
+    loadDotenv()
+  }
+  validateEnvironmentVariables()
+}
 
-export default envVariables;
+
+export default loadEnvironment;

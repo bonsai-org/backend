@@ -1,5 +1,5 @@
-import { Schema, model, Types } from 'mongoose';
-import { BonsaiChapter } from "../types/schemas"
+import { Schema, model } from 'mongoose';
+import { BonsaiChapter } from "../../types/schemas"
 
 const BonsaiChapterSchema = new Schema<BonsaiChapter>({
   photoUrls: [{ type: Schema.Types.String, maxLength: 200, required: true }],
@@ -9,4 +9,4 @@ const BonsaiChapterSchema = new Schema<BonsaiChapter>({
 },
   { timestamps: true });
 
-module.exports = model('BonsaiChapterSchema', BonsaiChapterSchema);
+export const BonsaiChapterModel = model('BonsaiChapter', BonsaiChapterSchema); 

@@ -1,12 +1,11 @@
 import { MongooseEvents } from '../types'
-import envVariables from './environment-variables'
-import { CriticalError } from './error';
+import { CriticalError } from '../errors/systemError';
 import mongoose from 'mongoose';
 import shutdownApplication from './shutdown';
 
 export default async function connectMongo(): Promise<void> {
   try {
-    await mongoose.connect(envVariables.MONGO_DB_STRING);
+    await mongoose.connect(process.env.MONGO_DB_STRING);
   } catch (error) {
     throw new CriticalError({
       name: 'DATABASE_CONNECTION_FAILURE',

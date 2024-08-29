@@ -1,4 +1,7 @@
 import express, { Request, Response } from 'express';
+import { sanitizeSignUp } from '../middleware/sanitizers'
+import { signUp } from '../controllers/signup'
+import { validateSignup } from '../middleware/validators';
 const userRouter = express.Router();
 
 userRouter.get('/', (req: Request, res: Response) => {
@@ -9,21 +12,7 @@ userRouter.get('/', (req: Request, res: Response) => {
   });
 });
 
-userRouter.get('/signup', (req: Request, res: Response) => {
-  res.json({
-    message: 'Signup: Presents a form to create a new user account.',
-    path: '/api/user/signup',
-    verb: 'GET',
-  });
-});
-
-userRouter.post('/signup', (req: Request, res: Response) => {
-  res.json({
-    message: 'Signup: Creates a new user account.',
-    path: '/api/user/signup',
-    verb: 'POST',
-  });
-});
+userRouter.post('/signup', validateSignup, sanitizeSignUp, signUp);
 
 userRouter.post('/login', (req: Request, res: Response) => {
   res.json({

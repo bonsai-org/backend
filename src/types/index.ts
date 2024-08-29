@@ -18,7 +18,7 @@ export enum MongooseEvents {
 export type EnvironmentVariables = {
   MONGO_DB_STRING: string;
   PORT: number;
-  NODE_ENV: NodeEnvironments
+  NODE_ENV: 'prod' | 'dev' | 'stage' | 'local'
 };
 
 export type NullErrorHandler = {};

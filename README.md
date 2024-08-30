@@ -2,32 +2,45 @@
 
 ### How to run this application on your machine 
 
-1. Fork this repository and clone the application onto your machine.
+#### Using Docker Compose 
 
-2. Install and run MongoDB locally on your machine. You can find directions on how to install MongoDB Community Server for your particular machine [here](https://www.mongodb.com/docs/manual/installation/). 
+The easiest way to run this backend on your machine is to use docker compose. The fastest way to get setup with Compose and Docker is by installing [Docker Desktop](https://www.docker.com/products/docker-desktop/) on your machine. Once installed, you should be able to get the application up and running fairly easily. 
 
-3. Install dependencies 
+**Run Dev Server**
 
-```bash
-npm install 
-```
-
-4. Create a .env file in the root of the project directory and add the following variables. 
-
-<i>Note that this bare bones setup is to simply get us up and running and that more secure secret sharing will be used in the future.</i>
+In one terminal run compose 
 
 ```bash
-# This is the default MongoDB Community Server URL followed by a database called bonsai-dev-database. 
-MONGO_DB_STRING="mongodb://localhost:27017/bonsai-dev-database" 
-PORT=3000
-NODE_ENV="dev"
+# With logs
+docker compose watch
+# Without logs
+docker compose watch -d 
 ```
 
-5. Start the application
+**Listen for live log updates**
+
+In another terminal, listen for log updates from the backend container. 
+
 ```bash
-npm run dev
+docker compose logs -f backend
 ```
 
+
+Note, if you run compose watch, the server will restart 
+with any changes made to source code in the backend. You can instead 
+choose to use ```docker compose up -d```, which will just run the dev server 
+and won't update due to file changes made in source after the time of the 
+initial build. 
+
+
+# Important Stuff
+
+
+- The server listens on port 3000. All api requests that are being made locally to this 
+machine can be accessed via http://localhost:3000.
+
+
+<!-- 
 
 ## Henry Todo 
 
@@ -35,4 +48,4 @@ npm run dev
 - [ ] Implement Auth/JWTs 
 - [ ] Add comments to code 
 - [ ] Clean up stuff
-- [ ] Extract logic of formulating client responses into one or more standardized formats 
+- [ ] Extract logic of formulating client responses into one or more standardized formats  -->

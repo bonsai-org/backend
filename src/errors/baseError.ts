@@ -1,4 +1,4 @@
-import { LogLevels } from '../types'
+import { LogLevels } from '../types';
 
 export class BaseError<T extends string> extends Error {
   name: T;

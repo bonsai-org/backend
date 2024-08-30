@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import { sanitizeSignUp } from '../middleware/sanitizers'
-import { signUp } from '../controllers/signup'
+import { sanitizeSignUp } from '../middleware/sanitizers';
+import { signUp } from '../controllers/signup';
 import { validateSignup } from '../middleware/validators';
 const userRouter = express.Router();
 

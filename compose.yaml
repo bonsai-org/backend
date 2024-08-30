@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: . 
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
+      PORT : "3000"
+      NODE_ENV: "dev"
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+    depends_on:
+      - mongodb
+    command: npm run dev
+    
+  mongodb:
+    image: "mongodb/mongodb-community-server:latest"
+    ports:
+      - "27017:27017"

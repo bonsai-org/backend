@@ -10,7 +10,7 @@ const app = Express();
 app.use(Express.json());
 if (process.env.NODE_ENV === 'dev') {
   app.use(morgan('dev'));
-  app.use(Express.urlencoded({ extended: true }))
+  app.use(Express.urlencoded({ extended: true }));
 }
 
 app.use('/api/user', userRouter);

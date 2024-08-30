@@ -1,8 +1,8 @@
-import { IUser } from './schemas'
+import { IUser } from './schemas';
 
-type NodeEnvironments = 'prod' | 'dev' | 'stage'
+type NodeEnvironments = 'prod' | 'dev' | 'stage';
 
-export type LogLevels = 'Info' | 'Warn' | 'Error' | 'Fatal'
+export type LogLevels = 'Info' | 'Warn' | 'Error' | 'Fatal';
 
 export enum MongooseEvents {
   CONNECTING = 'connecting',
@@ -18,13 +18,13 @@ export enum MongooseEvents {
 export type EnvironmentVariables = {
   MONGO_DB_STRING: string;
   PORT: number;
-  NODE_ENV: 'prod' | 'dev' | 'stage' | 'local'
+  NODE_ENV: 'prod' | 'dev' | 'stage' | 'local';
 };
 
 export type NullErrorHandler = {};
 
-// This enum is ripped from axios. 
-// Thanks Axios! 
+// This enum is ripped from axios.
+// Thanks Axios!
 // https://github.com/axios/axios
 
 export enum HttpStatusCode {
@@ -126,12 +126,12 @@ export enum JoiErrorTypes {
   ObjectOr = 'object.or',
   ObjectXor = 'object.xor',
   ObjectWith = 'object.with',
-  ObjectWithout = 'object.without'
+  ObjectWithout = 'object.without',
 }
 
 export type validationErrorResponse = {
-  [index: string]: string
-}
+  [index: string]: string;
+};
 
 export enum FormFields {
   USERNAME = 'username',
@@ -141,13 +141,13 @@ export enum FormFields {
 }
 
 export type UserQuery = {
-  user: IUser | null,
-  error: unknown
-}
+  user: IUser | null;
+  error: unknown;
+};
 
 export type SignUpRequest = {
-  username: string,
-  password: string,
-  email: string,
-  confirmPassword?: string,
-}
+  username: string;
+  password: string;
+  email: string;
+  confirmPassword?: string;
+};

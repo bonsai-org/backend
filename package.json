@@ -14,7 +14,8 @@
     "clean": "rimraf dist",
     "prod": "npm run clean && npx tsc && node ./dist/bin/main.js",
     "lint": "eslint ./src/**/**.ts ./tests/**/**.test.ts",
-    "make-pretty": "prettier --config .prettierrc './src/**/*.ts' './tests/**/*.ts' --write"
+    "make-pretty": "prettier --config .prettierrc './src/**/*.ts' './tests/**/*.ts' --write", 
+    "build-and-run": "npx tsc && node ./dist/bin/main.js"
   },
   "repository": {
     "type": "git",

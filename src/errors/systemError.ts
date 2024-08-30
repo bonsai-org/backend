@@ -1,5 +1,5 @@
 import { BaseError } from './baseError';
-import { LogLevels } from '../types'
+import { LogLevels } from '../types';
 
 type ErrorName =
   | 'MISSING_ENVIRONMENT_VARIABLES'
@@ -9,17 +9,17 @@ export class CriticalError extends BaseError<ErrorName> {
   constructor({
     name,
     message,
-    stack
+    stack,
   }: {
-    name: ErrorName,
-    message: string,
-    stack?: any,
+    name: ErrorName;
+    message: string;
+    stack?: any;
   }) {
     super({
       name,
       message,
       stack,
-      level: 'Fatal'
-    })
+      level: 'Fatal',
+    });
   }
 }

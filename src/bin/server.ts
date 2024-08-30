@@ -1,13 +1,13 @@
-import app from '../app'
+import app from '../app';
 
-const server = app.listen(process.env.PORT)
+const server = app.listen(process.env.PORT);
 
 server.on('listening', () => {
-    console.log(`[LISTENING] on port ${process.env.PORT}`)
-})
+  console.log(`[LISTENING] on port ${process.env.PORT}`);
+});
 
 server.on('error', (err) => {
-    console.error(err.stack)
-})
+  console.error(err.stack);
+});
 
-export default server
+export default server;

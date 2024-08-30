@@ -2,14 +2,17 @@
 
 ### How to run this application on your machine 
 
-#### Using Docker Compose 
+### 1. Install Compose
 
 The easiest way to run this backend on your machine is to use docker compose. The fastest way to get setup with Compose and Docker is by installing [Docker Desktop](https://www.docker.com/products/docker-desktop/) on your machine. Once installed, you should be able to get the application up and running fairly easily. 
 
-**Run Dev Server**
+###  2. Start the Docker Deamon if it is not already running. 
+
+Open Docker Desktop if not already open/running on your machine.
+
+###  3. Run Dev Server
 
 In one terminal run compose 
-
 ```bash
 # With logs
 docker compose watch
@@ -17,14 +20,13 @@ docker compose watch
 docker compose watch -d 
 ```
 
-**Listen for live log updates**
+### 4. **Listen for live log updates**
 
 In another terminal, listen for log updates from the backend container. 
 
 ```bash
 docker compose logs -f backend
 ```
-
 
 Note, if you run compose watch, the server will restart 
 with any changes made to source code in the backend. You can instead 

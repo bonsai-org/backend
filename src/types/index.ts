@@ -153,3 +153,8 @@ export type SignUpRequest = {
   email: string;
   confirmPassword?: string;
 };
+
+export type LoginRequest = {
+  username: string;
+  password: string;
+}

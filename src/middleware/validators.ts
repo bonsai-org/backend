@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from '../types';
 import { formatErrorResponse } from '../utils/joi';
-import { signupValidation } from '../models/joi-schemas/signup';
+import { signupValidation } from '../models/joi-schemas/controllers';
 
 export function validateSignup(
   req: Request,
@@ -22,4 +22,8 @@ export function validateSignup(
     email: value.email,
   };
   return next();
+}
+
+export function validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
+
 }

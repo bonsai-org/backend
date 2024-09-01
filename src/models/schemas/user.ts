@@ -6,7 +6,6 @@ const UserSchema = new Schema<IUser>(
     username: { type: Schema.Types.String, required: true },
     password: { type: Schema.Types.String, required: true },
     email: { type: Schema.Types.String, required: true },
-    salt: { type: Schema.Types.String, required: true },
     profilePhoto: { type: Schema.Types.String },
     bio: { type: Schema.Types.String, maxlength: 400 },
     bonsai: [{ type: Schema.Types.ObjectId, ref: 'Bonsai' }],

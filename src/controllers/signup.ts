@@ -89,11 +89,11 @@ async function checkIfUserExists(
 async function hashPassword(
   password: string,
   rounds: number,
-): Promise<[string, string]> {
+): Promise<string> {
   try {
     let salt = await genSalt(rounds);
     let hashedPassword = await hash(password, salt);
-    return [salt, hashedPassword];
+    return hashedPassword;
   } catch (error) {
     throw new SignUpError({
       name: 'PASSWORD_HASH_ERROR',
@@ -119,12 +119,11 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
     let { username, password, email } = getSignupVariables(req);
     await checkIfUserExists(username, email);
-    let [salt, hashedPassword] = await hashPassword(password, 12);
+    let hashedPassword = await hashPassword(password, 12);
     let newUser = new User({
       username,
       password: hashedPassword,
       email,
-      salt,
       UUID: uuidv4(),
     });
     await newUser.save();

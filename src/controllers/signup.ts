@@ -2,9 +2,29 @@ import { User } from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup-error';
 import { genSalt, hash } from 'bcrypt';
-import { HttpStatusCode } from '../types';
+import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { getSignupVariables } from '../utils/required-field-checkers';
+
+function getSignupVariables(req: Request): SignUpRequest {
+  let signupRequest = req.signupRequest;
+  if (
+    !signupRequest ||
+    !signupRequest.username ||
+    !signupRequest.password ||
+    !signupRequest.email
+  ) {
+    throw new SignUpError({
+      name: 'MISSING_REQUIRED_FIELDS',
+      message: 'Missing something??',
+      level: 'Fatal',
+    });
+  }
+  return {
+    username: signupRequest.username,
+    password: signupRequest.password,
+    email: signupRequest.email,
+  };
+}
 
 /*
  * This function is responsible for checking that a user with the supplied

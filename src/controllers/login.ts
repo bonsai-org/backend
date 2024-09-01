@@ -24,6 +24,11 @@ function getLoginVariables(req: Request): LoginRequest {
     }
 }
 
+/* 
+ * Queries database to see if a user with a supplied username exists and 
+ * returns that user if so 
+*/
+
 async function checkIfUserExists(username: string): Promise<IUser> {
     let { user, error } = await User.findByUsername(username)
     if (error) {
@@ -43,6 +48,11 @@ async function checkIfUserExists(username: string): Promise<IUser> {
     }
     return user
 }
+
+/* 
+ * Validates plain text password supplied by user against hashed password 
+ * stored in database
+*/
 
 async function validatePassword(plainTextPassword: string, hashedPassword: string, username: string): Promise<void> {
     let validPassword = await compare(plainTextPassword, hashedPassword)

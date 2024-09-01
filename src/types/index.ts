@@ -19,6 +19,8 @@ export type EnvironmentVariables = {
   MONGO_DB_STRING: string;
   PORT: number;
   NODE_ENV: 'prod' | 'dev' | 'stage' | 'local';
+  REFRESH_TOKEN_SECRET: string;
+  ACCESS_TOKEN_SECRET: string;
 };
 
 export type NullErrorHandler = {};

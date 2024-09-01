@@ -8,6 +8,7 @@ export interface IUser {
   bio?: string;
   bonsai?: Types.ObjectId[];
   UUID: string;
+  refreshToken: number;
 }
 
 export interface Bonsai {

@@ -4,12 +4,13 @@ import { UserQuery } from '../types';
 import { UserQueries } from './queries/user';
 
 export class User extends UserModel {
-  constructor({ username, password, email, UUID }: IUser) {
+  constructor({ username, password, email, UUID, refreshToken }: IUser) {
     super({
       username,
       password,
       email,
       UUID,
+      refreshToken
     });
   }
 

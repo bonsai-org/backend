@@ -125,6 +125,7 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
       password: hashedPassword,
       email,
       UUID: uuidv4(),
+      refreshToken: 1
     });
     await newUser.save();
     return res

@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
-import { sanitizeSignUp } from '../middleware/sanitizers';
+import { sanitizeSignUp, sanitizeLogin } from '../middleware/sanitizers';
 import { signUp } from '../controllers/signup';
-import { validateSignup } from '../middleware/validators';
+import { login } from '../controllers/login'
+import { validateLogin, validateSignup } from '../middleware/validators';
 const userRouter = express.Router();
 
 userRouter.get('/', (req: Request, res: Response) => {
@@ -14,13 +15,7 @@ userRouter.get('/', (req: Request, res: Response) => {
 
 userRouter.post('/signup', validateSignup, sanitizeSignUp, signUp);
 
-userRouter.post('/login', (req: Request, res: Response) => {
-  res.json({
-    message: 'Login: Authenticates a user.',
-    path: '/api/user/login',
-    verb: 'POST',
-  });
-});
+userRouter.post('/login', validateLogin, sanitizeLogin, login)
 
 userRouter.get('/:id/profile', (req: Request, res: Response) => {
   res.json({

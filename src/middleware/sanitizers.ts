@@ -18,3 +18,15 @@ export function sanitizeSignUp(
   }
   return next();
 }
+
+export function sanitizeLogin(req: Request, res: Response, next: NextFunction): Response | void {
+  let dangerousEntries = getDirtyFields(req, [
+    FormFields.USERNAME,
+    FormFields.EMAIL
+  ])
+  if (dangerousEntries.length !== 0) {
+    return res
+      .status(HttpStatusCode.BadRequest)
+  }
+  return next()
+}

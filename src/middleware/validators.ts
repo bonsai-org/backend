@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from '../types';
 import { formatErrorResponse } from '../utils/joi';
-import { signupValidation } from '../models/joi-schemas/controllers';
+import { loginValidation, signupValidation } from '../models/joi-schemas/controllers';
 
 export function validateSignup(
   req: Request,
@@ -25,5 +25,16 @@ export function validateSignup(
 }
 
 export function validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
-
+  const { error, value } = loginValidation.validate(req.body, {
+    abortEarly: false
+  })
+  if (error) {
+    return res
+      .sendStatus(HttpStatusCode.Unauthorized)
+  }
+  req.loginRequest = {
+    username: value.username,
+    password: value.password
+  }
+  return next()
 }

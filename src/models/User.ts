@@ -13,12 +13,23 @@ export class User extends UserModel {
     });
   }
 
+  static async findByUsername(username: string): Promise<UserQuery> {
+    try {
+      let user = await UserQueries.queryByUsername(username)
+      if (user !== null) {
+        return { user, error: null }
+      }
+      return { user: null, error: null }
+    } catch (error) {
+      return { user: null, error }
+    }
+  }
+
   static async findByEmailOrUsername(
     username: string,
     email: string,
   ): Promise<UserQuery> {
     try {
-      debugger;
       let user = await UserQueries.queryByEmailOrUsername(username, email);
       if (user !== null) {
         return { user, error: null };

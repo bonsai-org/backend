@@ -4,6 +4,8 @@ import { HttpStatusCode, LoginRequest } from '../types'
 import { LoginError } from '../errors/application-errors/login-error'
 import { IUser } from '../types/schemas'
 import { compare } from 'bcrypt'
+import { InternalApiError } from '../errors/internalApiError'
+import { MongoError } from '../errors/mongo-error'
 
 function getLoginVariables(req: Request): LoginRequest {
     let loginRequest = req.loginRequest
@@ -12,10 +14,9 @@ function getLoginVariables(req: Request): LoginRequest {
         !loginRequest.username ||
         !loginRequest.password
     ) {
-        throw new LoginError({
-            name: 'MISSING_REQUIRED_FIELDS',
-            message: 'Missing required body fields',
-            level: 'Fatal'
+        throw new InternalApiError({
+            name: 'REQUEST_OBJECT_MISSING_PROPERTY',
+            message: 'Missing request object fields in login controller',
         })
     }
     return {
@@ -32,10 +33,9 @@ function getLoginVariables(req: Request): LoginRequest {
 async function checkIfUserExists(username: string): Promise<IUser> {
     let { user, error } = await User.findByUsername(username)
     if (error) {
-        throw new LoginError({
-            name: 'INTERNAL_API_ERROR',
-            message: 'An error occured while querying for user',
-            level: 'Fatal',
+        throw new MongoError({
+            name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
+            message: 'An error occured while querying for a user in login',
             stack: error
         })
     }
@@ -70,6 +70,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         let { username, password } = getLoginVariables(req)
         let user = await checkIfUserExists(username)
         await validatePassword(password, user.password, user.username)
+        req.user = user
         return res.sendStatus(200)
     } catch (error) {
         if (error instanceof LoginError) {

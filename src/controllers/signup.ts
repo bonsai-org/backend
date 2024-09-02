@@ -1,9 +1,12 @@
 import { User } from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup-error';
+import { MongoError } from '../errors/mongo-error'
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { IUser } from '../types/schemas';
+import { InternalApiError } from '../errors/internalApiError';
 
 function getSignupVariables(req: Request): SignUpRequest {
   let signupRequest = req.signupRequest;
@@ -13,10 +16,9 @@ function getSignupVariables(req: Request): SignUpRequest {
     !signupRequest.password ||
     !signupRequest.email
   ) {
-    throw new SignUpError({
-      name: 'MISSING_REQUIRED_FIELDS',
-      message: 'Missing something??',
-      level: 'Fatal',
+    throw new InternalApiError({
+      name: 'REQUEST_OBJECT_MISSING_PROPERTY',
+      message: `Failed to construct user data from request object `
     });
   }
   return {
@@ -49,10 +51,9 @@ async function checkIfUserExists(
 ): Promise<void> {
   let { user, error } = await User.findByEmailOrUsername(username, email);
   if (error) {
-    throw new SignUpError({
-      name: 'INTERNAL_API_ERROR',
+    throw new MongoError({
+      name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
       message: `Failed to query mongoDB for username ${username} and email ${email}`,
-      level: 'Fatal',
       stack: error,
     });
   }
@@ -95,12 +96,35 @@ async function hashPassword(
     let hashedPassword = await hash(password, salt);
     return hashedPassword;
   } catch (error) {
-    throw new SignUpError({
-      name: 'PASSWORD_HASH_ERROR',
-      message: "An error occured while hashing users' password",
-      level: 'Fatal',
+    throw new InternalApiError({
+      name: 'BCRYPT_ERROR',
+      message: "An error occured while hashing a users' password during signup",
       stack: error,
     });
+  }
+}
+
+export async function createUser(
+  username: string,
+  hashedPassword: string,
+  email: string,
+): Promise<User> {
+  try {
+    let user = new User({
+      username,
+      password: hashedPassword,
+      email,
+      UUID: uuidv4(),
+      refreshToken: 1,
+    })
+    await user.save()
+    return user
+  } catch (error) {
+    throw new MongoError({
+      name: 'FAILED_TO_SAVE_NEW_USER',
+      message: 'Failed to create new user document during signup',
+      stack: error
+    })
   }
 }
 
@@ -120,35 +144,23 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     let { username, password, email } = getSignupVariables(req);
     await checkIfUserExists(username, email);
     let hashedPassword = await hashPassword(password, 12);
-    let newUser = new User({
-      username,
-      password: hashedPassword,
-      email,
-      UUID: uuidv4(),
-      refreshToken: 1
-    });
-    await newUser.save();
+    let user = await createUser(username, hashedPassword, email)
+    req.user = user
     return res
       .status(HttpStatusCode.Ok)
       .json({ message: 'Welcome to bonsai org!' });
   } catch (error) {
     if (error instanceof SignUpError) {
       if (
-        error.name === 'EMAIL_IN_USE' ||
         error.name === 'USERNAME_IN_USE' ||
+        error.name === 'EMAIL_IN_USE' ||
         error.name === 'USERNAME_AND_EMAIL_IN_USE'
       ) {
         return res
           .status(HttpStatusCode.Conflict)
           .json({ message: error.message });
-      } else if (
-        error.name === 'INTERNAL_API_ERROR' ||
-        error.name === 'PASSWORD_HASH_ERROR' ||
-        error.name === 'MISSING_REQUIRED_FIELDS'
-      ) {
-        next(error);
       }
     }
-    next(error);
+    next(error)
   }
 }

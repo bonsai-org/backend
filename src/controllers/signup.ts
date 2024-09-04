@@ -7,6 +7,7 @@ import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { IUser } from '../types/schemas';
 import { InternalApiError } from '../errors/internalApiError';
+import { sendAuthTokens } from '../middleware/jwts';
 
 function getSignupVariables(req: Request): SignUpRequest {
   let signupRequest = req.signupRequest;
@@ -145,7 +146,7 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     await checkIfUserExists(username, email);
     let hashedPassword = await hashPassword(password, 12);
     let user = await createUser(username, hashedPassword, email)
-    req.user = user
+    sendAuthTokens(res, user)
     return res
       .status(HttpStatusCode.Ok)
       .json({ message: 'Welcome to bonsai org!' });

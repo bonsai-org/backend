@@ -59,15 +59,10 @@ export function getCookieValues(res: Response, req: Request, next: NextFunction)
     return { accessToken: id, refreshToken: rid }
 }
 
-export function sendAuthTokens(req: Request, res: Response, next: NextFunction) {
-    try {
-        let user = getUserProperty(req)
-        let { accessToken, refreshToken } = createAuthTokens(user)
-        res.cookie("id", accessToken, cookieOpts)
-        res.cookie("rid", refreshToken, cookieOpts)
-    } catch (error) {
-        next(error)
-    }
+export function sendAuthTokens(res: Response, user: IUser) {
+    let { accessToken, refreshToken } = createAuthTokens(user)
+    res.cookie("id", accessToken, cookieOpts)
+    res.cookie("rid", refreshToken, cookieOpts)
 }
 
 export function clearAuthCookies(req: Request, res: Response, next: NextFunction) {

@@ -9,6 +9,7 @@ import { MongoError } from './errors/mongo-error';
 import { InternalApiError } from './errors/internalApiError';
 import { HttpStatusCode } from './types'
 import { sendAuthTokens } from './middleware/jwts'
+import { AuthError } from './errors/authError';
 
 const app = Express();
 
@@ -28,6 +29,7 @@ app.get('*', (req, res) => {
 });
 
 // Needs some kind of persistant logging! 
+// As well as some standardized way of dealing with errors :-)
 
 app.use((err: unknown, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
   if (
@@ -38,6 +40,9 @@ app.use((err: unknown, req: Express.Request, res: Express.Response, next: Expres
     console.log(err.message)
     console.log(err.name)
     err.stack ? console.log(err.level) : null
+  }
+  else if (err instanceof AuthError) {
+    return res.sendStatus(HttpStatusCode.Unauthorized)
   }
   else { console.log(err) }
   return res.sendStatus(HttpStatusCode.InternalServerError)

@@ -131,6 +131,25 @@ export enum JoiErrorTypes {
   ObjectWithout = 'object.without',
 }
 
+export type RefreshTokenData = {
+  username: string;
+  refreshTokenVersion?: number;
+};
+
+export type AccessTokenData = {
+  username: string;
+};
+
+export type NewlyGeneratedTokens = {
+  refreshToken: string,
+  accessToken: string
+}
+
+export type AuthorizedTokenData = {
+  username: string,
+  user?: IUser
+}
+
 export type validationErrorResponse = {
   [index: string]: string;
 };

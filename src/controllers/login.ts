@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/User'
 import { HttpStatusCode, LoginRequest } from '../types'
+import { sendAuthTokens } from '../middleware/jwts'
 import { LoginError } from '../errors/application-errors/login-error'
 import { IUser } from '../types/schemas'
 import { compare } from 'bcrypt'
@@ -70,7 +71,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         let { username, password } = getLoginVariables(req)
         let user = await checkIfUserExists(username)
         await validatePassword(password, user.password, user.username)
-        req.user = user
+        sendAuthTokens(res, user)
         return res.sendStatus(200)
     } catch (error) {
         if (error instanceof LoginError) {

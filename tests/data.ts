@@ -11,9 +11,11 @@ type UserFields = 'username' | 'password' | 'confirmPassword' | 'email'
 
 export default class UserRequests {
 
-  static removeSpecificField(user: TestUser, fieldName: UserFields): TestUser {
+  static removeSpecificFields(user: TestUser, fieldNames: UserFields[]): TestUser {
     let copy = { ...user }
-    delete copy[fieldName]
+    for (let field of fieldNames) {
+      delete copy[field]
+    }
     return copy
   }
 
@@ -69,8 +71,9 @@ export default class UserRequests {
     confirmPassword: 'differentPassword'
   }
 
-  static MISSING_USERNAME_FIELD = this.removeSpecificField(this.GOOD_USER, 'username')
-  static MISSING_PASSWORD_FIELD = this.removeSpecificField(this.GOOD_USER, 'password')
-  static MISSING_CONFIRM_PASSWORD_FIELD = this.removeSpecificField(this.GOOD_USER, 'confirmPassword')
-  static MISSING_EMAIL_FIELD = this.removeSpecificField(this.GOOD_USER, 'email')
+  static MISSING_USERNAME_FIELD = this.removeSpecificFields(this.GOOD_USER, ['username'])
+  static MISSING_PASSWORD_FIELD = this.removeSpecificFields(this.GOOD_USER, ['password'])
+  static MISSING_CONFIRM_PASSWORD_FIELD = this.removeSpecificFields(this.GOOD_USER, ['confirmPassword'])
+  static MISSING_EMAIL_FIELD = this.removeSpecificFields(this.GOOD_USER, ['email'])
+  static MISSING_USERNAME_AND_PASSWORD_FIELD = this.removeSpecificFields(this.GOOD_USER, ['username', 'password'])
 }

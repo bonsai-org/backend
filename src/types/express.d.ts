@@ -8,6 +8,7 @@ declare global {
       signupRequest?: SignUpRequest;
       loginRequest?: LoginRequest;
       user?: IUser;
+      loggedIn?: boolean
     }
   }
 }

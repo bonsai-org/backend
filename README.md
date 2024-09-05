@@ -53,6 +53,10 @@ initial build.
     was able to successfully sign up with the supplied information
     - Signup will return a status code of 400 if any of the required fields are incorrect 
     - Valid usernames and passwords for the bonsai org must be at least 8 characters and at most 20 characters long, and usernames can only contain alphanumeric characters (a-z, A-Z, 0-9). Passwords can contain any character
+- **GET /api/auth**
+    - This is a get request that the client can make when the user first visits the application to determine if they have valid credentials. 
+    - In order for this endpoint to work, the client must include cookies in the get request. 
+    - If the client sends valid cookies, the endpoint will return a status of 200, with a json payload { loggedIn: true }. If the client supplies invalid credentials, it will receive a 401 status (unauthorized) and will be redirected to /login. 
 
 # Important Stuff
 

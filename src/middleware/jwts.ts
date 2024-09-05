@@ -159,7 +159,7 @@ export async function checkTokens(
       message: 'User has supplied an outdated refresh token',
     });
   }
-  sendAuthTokens(res, user)
+  sendAuthTokens(res, user);
   return {
     username: user.username,
     user,
@@ -172,11 +172,11 @@ export async function checkTokensMiddleware(
   next: NextFunction,
 ): Promise<void> {
   try {
-    debugger
+    debugger;
     let { accessToken, refreshToken } = getCookieValues(req);
     await checkTokens(accessToken, refreshToken, res);
-    req.loggedIn = true
-    return next()
+    req.loggedIn = true;
+    return next();
   } catch (error) {
     if (error instanceof AuthError) {
       if (
@@ -186,10 +186,10 @@ export async function checkTokensMiddleware(
         error.name === 'REFRESH_TOKEN_VERSION_MISMATCH' ||
         error.name === 'NO_TOKENS_SENT'
       ) {
-        req.loggedIn = false
-        return next()
+        req.loggedIn = false;
+        return next();
       }
     }
-    return next(error)
+    return next(error);
   }
 }

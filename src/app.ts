@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'dev') {
 
 app.use('/api/user', userRouter);
 app.use('/api/bonsai', router);
-app.use('/api/auth', authRouter)
+app.use('/api/auth', authRouter);
 
 app.get('*', (req, res) => {
   return res.sendStatus(HttpStatusCode.NotFound);

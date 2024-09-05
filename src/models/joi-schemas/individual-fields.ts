@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { JoiErrorTypes } from '../../types';
+import { JoiErrorTypes, FormFields } from '../../types';
 
 export const username = Joi.string()
     .min(8)
@@ -7,10 +7,10 @@ export const username = Joi.string()
     .alphanum()
     .required()
     .messages({
-        [JoiErrorTypes.StringMin]: 'Username must be at least 8 characters',
-        [JoiErrorTypes.StringMax]: 'Username cannot exceed 20 characters',
-        [JoiErrorTypes.StringAlphanum]: 'Username can only contain a-z, A-Z, 0-9',
-        [JoiErrorTypes.AnyRequired]: 'You must supply a Username',
+        [JoiErrorTypes.StringMin]: FormFields.USERNAME,
+        [JoiErrorTypes.StringMax]: FormFields.USERNAME,
+        [JoiErrorTypes.StringAlphanum]: FormFields.USERNAME,
+        [JoiErrorTypes.AnyRequired]: FormFields.USERNAME,
     })
 
 export const password = Joi.string()
@@ -18,25 +18,25 @@ export const password = Joi.string()
     .max(20)
     .required()
     .messages({
-        [JoiErrorTypes.StringMin]: 'Password must be at least 8 characters',
-        [JoiErrorTypes.StringMax]: 'Password cannot exceed 20 characters',
-        [JoiErrorTypes.AnyRequired]: 'You must supply a Password',
+        [JoiErrorTypes.StringMin]: FormFields.PASSWORD,
+        [JoiErrorTypes.StringMax]: FormFields.PASSWORD,
+        [JoiErrorTypes.AnyRequired]: FormFields.PASSWORD,
     })
 
 export const confirmPassword = Joi.string()
     .valid(Joi.ref('password'))
     .required()
     .messages({
-        'any.only': 'Passwords must match',
-        'any.required': 'You must confirm your password',
+        [JoiErrorTypes.AnyOnly]: FormFields.CONFIRM_PASSWORD,
+        [JoiErrorTypes.AnyRequired]: FormFields.CONFIRM_PASSWORD,
     });
 
 export const email = Joi.string()
     .email()
     .required()
     .messages({
-        [JoiErrorTypes.StringEmail]: 'You must supply a valid email',
-        [JoiErrorTypes.AnyRequired]: 'You must supply a valid email to sign up',
+        [JoiErrorTypes.StringEmail]: FormFields.EMAIL,
+        [JoiErrorTypes.AnyRequired]: FormFields.EMAIL,
     })
 
 

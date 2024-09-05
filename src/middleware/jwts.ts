@@ -54,13 +54,9 @@ function createAuthTokens(user: IUser): NewlyGeneratedTokens {
 // We need either the accessToken or the refreshToken to continue. Supplying neither, will
 // result in a 401.
 
-export function getCookieValues(
-  res: Response,
-  req: Request,
-  next: NextFunction,
-) {
+export function getCookieValues(req: Request) {
   let { id, rid } = req.cookies;
-  if (id === undefined && rid === undefined) {
+  if (typeof id !== 'string' || typeof rid !== 'string') {
     throw new AuthError({
       name: 'NO_TOKENS_SENT',
       message: 'User sent no tokens with request',
@@ -165,4 +161,32 @@ export async function checkTokens(
     username: user.username,
     user,
   };
+}
+
+export async function checkTokensMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    debugger
+    let { accessToken, refreshToken } = getCookieValues(req);
+    await checkTokens(accessToken, refreshToken);
+    req.loggedIn = true
+    return next()
+  } catch (error) {
+    if (error instanceof AuthError) {
+      if (
+        error.name === 'INVALID_REFRESH_TOKEN' ||
+        error.name === 'MISSING_REFRESH_TOKEN' ||
+        error.name === 'USER_NOT_FOUND_FROM_REFRESH' ||
+        error.name === 'REFRESH_TOKEN_VERSION_MISMATCH' ||
+        error.name === 'NO_TOKENS_SENT'
+      ) {
+        req.loggedIn = false
+        return next()
+      }
+    }
+    return next(error)
+  }
 }

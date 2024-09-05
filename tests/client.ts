@@ -1,4 +1,12 @@
 import axios, { AxiosInstance } from 'axios';
+import { TestUser } from './data';
+
+/*
+ * this axios client will not throw an error depending on the status code it
+ * gets back from the server.
+ *
+ * it is assumed that the tester will check and properly handle those status codes
+ */
 
 export default class Client {
   declare clientInstance: AxiosInstance;
@@ -10,10 +18,26 @@ export default class Client {
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true,
       validateStatus: function (status) {
-        return status >= 200 && status < 500; // Only fail on internal server error
+        return status >= 200 && status <= 500;
       },
     });
+  }
+
+  public async login({
+    username,
+    password
+  }: TestUser) {
+    let response = await this.clientInstance({
+      url: '/login',
+      method: 'post',
+      data: {
+        username,
+        password
+      }
+    })
+    return response
   }
 
   public async signup({
@@ -21,12 +45,7 @@ export default class Client {
     password,
     confirmPassword,
     email,
-  }: {
-    username?: string;
-    password?: string;
-    confirmPassword?: string;
-    email?: string;
-  }) {
+  }: TestUser) {
     let response = await this.clientInstance({
       url: '/signup',
       method: 'post',
@@ -40,15 +59,3 @@ export default class Client {
     return response;
   }
 }
-
-// async function main() {
-//     let client = new Client()
-//     await client.signup({
-//         username: 'henrymjacobss',
-//         password: 'password',
-//         confirmPassword: 'password',
-//         email: 'henrymjasobs@gmail.com'
-//     })
-// }
-
-// main()

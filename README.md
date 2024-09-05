@@ -62,3 +62,13 @@ initial build.
 
 - The server listens on port 3000 when running locally via docker compose. All api requests that are being made locally to your machine that is running compose can be made via http://localhost:3000.
 - All post requests to this server should have their Content-Type headers set to application/json
+
+## To Do 
+- [ ] Write endpoints to create, read, and update bonsai
+    - [ ] How do you upload, edit, and delete bonsai images? 
+- [ ] Refactor test suite to be less bloated and repetitive
+- [ ] Write tests for launch application controller
+    - [ ] Sketch out the general flow of the request response cycle of the client first visting the site, 
+    being authenticated, and requesting some data. 
+- [ ] Documentation
+- [ ] Hosting  

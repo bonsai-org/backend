@@ -4,11 +4,11 @@ import Express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user';
+import authRouter from './routes/auth';
 import router from './routes/bonsai';
 import { MongoError } from './errors/mongo-error';
 import { InternalApiError } from './errors/internalApiError';
 import { HttpStatusCode } from './types';
-import { sendAuthTokens } from './middleware/jwts';
 import { AuthError } from './errors/authError';
 
 const app = Express();
@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'dev') {
 
 app.use('/api/user', userRouter);
 app.use('/api/bonsai', router);
+app.use('/api/auth', authRouter)
 
 app.get('*', (req, res) => {
   return res.sendStatus(HttpStatusCode.NotFound);

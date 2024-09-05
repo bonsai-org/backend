@@ -1,8 +1,4 @@
 import express, { Request, Response } from 'express';
-import { sanitizeSignUp, sanitizeLogin } from '../middleware/sanitizers';
-import { signUp } from '../controllers/signup';
-import { login } from '../controllers/login';
-import { validateLogin, validateSignup } from '../middleware/validators';
 const userRouter = express.Router();
 
 userRouter.get('/', (req: Request, res: Response) => {
@@ -12,10 +8,6 @@ userRouter.get('/', (req: Request, res: Response) => {
     verb: 'GET',
   });
 });
-
-userRouter.post('/signup', validateSignup, sanitizeSignUp, signUp);
-
-userRouter.post('/login', validateLogin, sanitizeLogin, login);
 
 userRouter.get('/:id/profile', (req: Request, res: Response) => {
   res.json({

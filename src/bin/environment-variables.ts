@@ -10,6 +10,8 @@ const envVarsSchema = Joi.object<EnvironmentVariables>({
   MONGO_DB_STRING: Joi.string().uri().required(),
   PORT: Joi.number().required(),
   NODE_ENV: Joi.string().valid('prod', 'dev', 'stage', 'local').required(),
+  REFRESH_TOKEN_SECRET: Joi.string().required(),
+  ACCESS_TOKEN_SECRET: Joi.string().required(),
 }).unknown();
 
 function loadDotenv() {

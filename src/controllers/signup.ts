@@ -1,10 +1,33 @@
 import { User } from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup-error';
+import { MongoError } from '../errors/mongo-error';
 import { genSalt, hash } from 'bcrypt';
-import { HttpStatusCode } from '../types';
+import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { getSignupVariables } from '../utils/required-field-checkers';
+import { IUser } from '../types/schemas';
+import { InternalApiError } from '../errors/internalApiError';
+import { sendAuthTokens } from '../middleware/jwts';
+
+function getSignupVariables(req: Request): SignUpRequest {
+  let signupRequest = req.signupRequest;
+  if (
+    !signupRequest ||
+    !signupRequest.username ||
+    !signupRequest.password ||
+    !signupRequest.email
+  ) {
+    throw new InternalApiError({
+      name: 'REQUEST_OBJECT_MISSING_PROPERTY',
+      message: `Failed to construct user data from request object `,
+    });
+  }
+  return {
+    username: signupRequest.username,
+    password: signupRequest.password,
+    email: signupRequest.email,
+  };
+}
 
 /*
  * This function is responsible for checking that a user with the supplied
@@ -29,10 +52,9 @@ async function checkIfUserExists(
 ): Promise<void> {
   let { user, error } = await User.findByEmailOrUsername(username, email);
   if (error) {
-    throw new SignUpError({
-      name: 'INTERNAL_API_ERROR',
+    throw new MongoError({
+      name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
       message: `Failed to query mongoDB for username ${username} and email ${email}`,
-      level: 'Fatal',
       stack: error,
     });
   }
@@ -66,19 +88,39 @@ async function checkIfUserExists(
  * and attach the bcrypt error to the cause property, so it can properly be logged.
  */
 
-async function hashPassword(
-  password: string,
-  rounds: number,
-): Promise<[string, string]> {
+async function hashPassword(password: string, rounds: number): Promise<string> {
   try {
     let salt = await genSalt(rounds);
     let hashedPassword = await hash(password, salt);
-    return [salt, hashedPassword];
+    return hashedPassword;
   } catch (error) {
-    throw new SignUpError({
-      name: 'PASSWORD_HASH_ERROR',
-      message: "An error occured while hashing users' password",
-      level: 'Fatal',
+    throw new InternalApiError({
+      name: 'BCRYPT_ERROR',
+      message: "An error occured while hashing a users' password during signup",
+      stack: error,
+    });
+  }
+}
+
+export async function createUser(
+  username: string,
+  hashedPassword: string,
+  email: string,
+): Promise<User> {
+  try {
+    let user = new User({
+      username,
+      password: hashedPassword,
+      email,
+      UUID: uuidv4(),
+      refreshToken: 1,
+    });
+    await user.save();
+    return user;
+  } catch (error) {
+    throw new MongoError({
+      name: 'FAILED_TO_SAVE_NEW_USER',
+      message: 'Failed to create new user document during signup',
       stack: error,
     });
   }
@@ -99,34 +141,22 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
     let { username, password, email } = getSignupVariables(req);
     await checkIfUserExists(username, email);
-    let [salt, hashedPassword] = await hashPassword(password, 12);
-    let newUser = new User({
-      username,
-      password: hashedPassword,
-      email,
-      salt,
-      UUID: uuidv4(),
-    });
-    await newUser.save();
+    let hashedPassword = await hashPassword(password, 12);
+    let user = await createUser(username, hashedPassword, email);
+    sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)
       .json({ message: 'Welcome to bonsai org!' });
   } catch (error) {
     if (error instanceof SignUpError) {
       if (
-        error.name === 'EMAIL_IN_USE' ||
         error.name === 'USERNAME_IN_USE' ||
+        error.name === 'EMAIL_IN_USE' ||
         error.name === 'USERNAME_AND_EMAIL_IN_USE'
       ) {
         return res
           .status(HttpStatusCode.Conflict)
           .json({ message: error.message });
-      } else if (
-        error.name === 'INTERNAL_API_ERROR' ||
-        error.name === 'PASSWORD_HASH_ERROR' ||
-        error.name === 'MISSING_REQUIRED_FIELDS'
-      ) {
-        next(error);
       }
     }
     next(error);

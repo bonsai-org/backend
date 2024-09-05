@@ -19,6 +19,8 @@ export type EnvironmentVariables = {
   MONGO_DB_STRING: string;
   PORT: number;
   NODE_ENV: 'prod' | 'dev' | 'stage' | 'local';
+  REFRESH_TOKEN_SECRET: string;
+  ACCESS_TOKEN_SECRET: string;
 };
 
 export type NullErrorHandler = {};
@@ -129,6 +131,25 @@ export enum JoiErrorTypes {
   ObjectWithout = 'object.without',
 }
 
+export type RefreshTokenData = {
+  username: string;
+  refreshTokenVersion?: number;
+};
+
+export type AccessTokenData = {
+  username: string;
+};
+
+export type NewlyGeneratedTokens = {
+  refreshToken: string;
+  accessToken: string;
+};
+
+export type AuthorizedTokenData = {
+  username: string;
+  user?: IUser;
+};
+
 export type validationErrorResponse = {
   [index: string]: string;
 };
@@ -150,4 +171,9 @@ export type SignUpRequest = {
   password: string;
   email: string;
   confirmPassword?: string;
+};
+
+export type LoginRequest = {
+  username: string;
+  password: string;
 };

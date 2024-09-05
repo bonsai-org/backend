@@ -14,13 +14,19 @@ Open Docker Desktop if not already open/running on your machine.
 
 In one terminal run compose 
 ```bash
-# With logs
+# With live reloading
 docker compose watch
-# Without logs
-docker compose watch -d 
+# Only dev server 
+docker compose up -d 
 ```
 
-### 4. **Listen for live log updates**
+**Or run the nodejs debugger via Compose**
+
+```bash
+docker compose -f compose.debug.yaml watch
+```
+
+### 4. Listen for live log updates
 
 In another terminal, listen for log updates from the backend container. 
 
@@ -34,20 +40,35 @@ choose to use ```docker compose up -d```, which will just run the dev server
 and won't update due to file changes made in source after the time of the 
 initial build. 
 
+## Working Endpoints 
+
+- **POST /api/auth/login**
+    - Requires username and password fields in a request body with content type set to application/json
+    - Login will return a status code of 200 with two cookies that represent an access token and a refresh token upon
+    successfully logging in
+    - Login will return a status code of 401 if either the username or password fields are incorrect 
+- **POST /api/auth/signup**
+    - Requires username, password, confirmPassword, and email fields in a request body with content type set to application/json
+    - Signup will return a status code of 200 with two cookies that represent an access token and a refresh token if the user
+    was able to successfully sign up with the supplied information
+    - Signup will return a status code of 400 if any of the required fields are incorrect 
+    - Valid usernames and passwords for the bonsai org must be at least 8 characters and at most 20 characters long, and usernames can only contain alphanumeric characters (a-z, A-Z, 0-9). Passwords can contain any character
+- **GET /api/auth**
+    - This is a get request that the client can make when the user first visits the application to determine if they have valid credentials. 
+    - In order for this endpoint to work, the client must include cookies in the get request. 
+    - If the client sends valid cookies, the endpoint will return a status of 200, with a json payload { loggedIn: true }. If the client supplies invalid credentials, it will receive a 401 status (unauthorized) and will be redirected to /login. 
 
 # Important Stuff
 
+- The server listens on port 3000 when running locally via docker compose. All api requests that are being made locally to your machine that is running compose can be made via http://localhost:3000.
+- All post requests to this server should have their Content-Type headers set to application/json
 
-- The server listens on port 3000. All api requests that are being made locally to this 
-machine can be accessed via http://localhost:3000.
-
-
-<!-- 
-
-## Henry Todo 
-
-- [ ] Implement Login
-- [ ] Implement Auth/JWTs 
-- [ ] Add comments to code 
-- [ ] Clean up stuff
-- [ ] Extract logic of formulating client responses into one or more standardized formats  -->
+## To Do 
+- [ ] Write endpoints to create, read, and update bonsai
+    - [ ] How do you upload, edit, and delete bonsai images? 
+- [ ] Refactor test suite to be less bloated and repetitive
+- [ ] Write tests for launch application controller
+    - [ ] Sketch out the general flow of the request response cycle of the client first visting the site, 
+    being authenticated, and requesting some data. 
+- [ ] Documentation
+- [ ] Hosting  

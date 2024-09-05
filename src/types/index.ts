@@ -141,14 +141,14 @@ export type AccessTokenData = {
 };
 
 export type NewlyGeneratedTokens = {
-  refreshToken: string,
-  accessToken: string
-}
+  refreshToken: string;
+  accessToken: string;
+};
 
 export type AuthorizedTokenData = {
-  username: string,
-  user?: IUser
-}
+  username: string;
+  user?: IUser;
+};
 
 export type validationErrorResponse = {
   [index: string]: string;
@@ -176,4 +176,4 @@ export type SignUpRequest = {
 export type LoginRequest = {
   username: string;
   password: string;
-}
+};

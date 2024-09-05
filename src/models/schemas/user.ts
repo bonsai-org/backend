@@ -10,7 +10,7 @@ const UserSchema = new Schema<IUser>(
     bio: { type: Schema.Types.String, maxlength: 400 },
     bonsai: [{ type: Schema.Types.ObjectId, ref: 'Bonsai' }],
     UUID: { type: Schema.Types.String, required: true },
-    refreshToken: { type: Schema.Types.Number, required: true }
+    refreshToken: { type: Schema.Types.Number, required: true },
   },
   {
     timestamps: true,

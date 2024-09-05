@@ -31,8 +31,8 @@ export default class UserRequests {
 
   static NON_ALPHANUMERIC_USERNAME_USER: TestUser = {
     ...this.GOOD_USER,
-    username: 'NonAlphaNum!-=.'
-  }
+    username: 'NonAlphaNum!-=.',
+  };
 
   // A user with an invalid email
   static INVALID_EMAIL_USER: TestUser = {
@@ -54,8 +54,8 @@ export default class UserRequests {
 
   static GOOD_USER_INCORRECT_PASSWORD_USER: TestUser = {
     ...this.GOOD_USER,
-    password: 'incorrect-password'
-  }
+    password: 'incorrect-password',
+  };
 
   // A user who only has a 6 character username instead of 8
   static USERNAME_TOO_SHORT_USER: TestUser = {
@@ -80,8 +80,8 @@ export default class UserRequests {
   static PASSWORD_TOO_SHORT_USER: TestUser = {
     ...this.GOOD_USER,
     password: 'short',
-    confirmPassword: 'short'
-  }
+    confirmPassword: 'short',
+  };
 
   // A user who has a different password and confirm password field
   static DIFF_PASSWORD_CONFIRM_PASSWORD_USER: TestUser = {

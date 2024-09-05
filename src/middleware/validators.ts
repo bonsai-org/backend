@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from '../types';
 import { __dev__ } from '../utils/constants';
-import { loginValidation, signupValidation } from '../models/joi-schemas/controllers';
-import { formatErrorMessage } from '../utils/client-response-formatters'
+import {
+  loginValidation,
+  signupValidation,
+} from '../models/joi-schemas/controllers';
+import { formatErrorMessage } from '../utils/client-response-formatters';
 
 export function validateSignup(
   req: Request,
@@ -13,7 +16,9 @@ export function validateSignup(
     abortEarly: false,
   });
   if (error) {
-    if (__dev__) { console.log(formatErrorMessage(error)) }
+    if (__dev__) {
+      console.log(formatErrorMessage(error));
+    }
     return res
       .status(HttpStatusCode.BadRequest)
       .json({ errors: formatErrorMessage(error) });
@@ -26,17 +31,20 @@ export function validateSignup(
   return next();
 }
 
-export function validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
+export function validateLogin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Response | void {
   const { error, value } = loginValidation.validate(req.body, {
-    abortEarly: false
-  })
+    abortEarly: false,
+  });
   if (error) {
-    return res
-      .sendStatus(HttpStatusCode.Unauthorized)
+    return res.sendStatus(HttpStatusCode.Unauthorized);
   }
   req.loginRequest = {
     username: value.username,
-    password: value.password
-  }
-  return next()
+    password: value.password,
+  };
+  return next();
 }

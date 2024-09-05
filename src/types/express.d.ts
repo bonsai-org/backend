@@ -7,7 +7,7 @@ declare global {
     interface Request {
       signupRequest?: SignUpRequest;
       loginRequest?: LoginRequest;
-      user?: IUser
+      user?: IUser;
     }
   }
 }

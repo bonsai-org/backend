@@ -25,19 +25,16 @@ export default class Client {
     });
   }
 
-  public async login({
-    username,
-    password
-  }: TestUser) {
+  public async login({ username, password }: TestUser) {
     let response = await this.clientInstance({
       url: '/login',
       method: 'post',
       data: {
         username,
-        password
-      }
-    })
-    return response
+        password,
+      },
+    });
+    return response;
   }
 
   public async signup({

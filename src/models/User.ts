@@ -10,19 +10,19 @@ export class User extends UserModel {
       password,
       email,
       UUID,
-      refreshToken
+      refreshToken,
     });
   }
 
   static async findByUsername(username: string): Promise<UserQuery> {
     try {
-      let user = await UserQueries.queryByUsername(username)
+      let user = await UserQueries.queryByUsername(username);
       if (user !== null) {
-        return { user, error: null }
+        return { user, error: null };
       }
-      return { user: null, error: null }
+      return { user: null, error: null };
     } catch (error) {
-      return { user: null, error }
+      return { user: null, error };
     }
   }
 

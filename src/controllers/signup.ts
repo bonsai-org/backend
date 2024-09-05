@@ -1,7 +1,7 @@
 import { User } from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup-error';
-import { MongoError } from '../errors/mongo-error'
+import { MongoError } from '../errors/mongo-error';
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,7 +19,7 @@ function getSignupVariables(req: Request): SignUpRequest {
   ) {
     throw new InternalApiError({
       name: 'REQUEST_OBJECT_MISSING_PROPERTY',
-      message: `Failed to construct user data from request object `
+      message: `Failed to construct user data from request object `,
     });
   }
   return {
@@ -88,10 +88,7 @@ async function checkIfUserExists(
  * and attach the bcrypt error to the cause property, so it can properly be logged.
  */
 
-async function hashPassword(
-  password: string,
-  rounds: number,
-): Promise<string> {
+async function hashPassword(password: string, rounds: number): Promise<string> {
   try {
     let salt = await genSalt(rounds);
     let hashedPassword = await hash(password, salt);
@@ -117,15 +114,15 @@ export async function createUser(
       email,
       UUID: uuidv4(),
       refreshToken: 1,
-    })
-    await user.save()
-    return user
+    });
+    await user.save();
+    return user;
   } catch (error) {
     throw new MongoError({
       name: 'FAILED_TO_SAVE_NEW_USER',
       message: 'Failed to create new user document during signup',
-      stack: error
-    })
+      stack: error,
+    });
   }
 }
 
@@ -145,8 +142,8 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     let { username, password, email } = getSignupVariables(req);
     await checkIfUserExists(username, email);
     let hashedPassword = await hashPassword(password, 12);
-    let user = await createUser(username, hashedPassword, email)
-    sendAuthTokens(res, user)
+    let user = await createUser(username, hashedPassword, email);
+    sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)
       .json({ message: 'Welcome to bonsai org!' });
@@ -162,6 +159,6 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
           .json({ message: error.message });
       }
     }
-    next(error)
+    next(error);
   }
 }

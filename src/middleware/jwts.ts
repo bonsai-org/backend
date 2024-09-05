@@ -100,9 +100,6 @@ function verifyRefreshToken(refreshToken: string): RefreshTokenData {
 /* 
  * Here is the flow of whats happening with checkTokens
  *  
- * NOTE!!! If we are able to verify an accessToken, checkTokens will only return a username. 
- * If we end up having to verify a refreshToken, then checkTokens will return the username 
- * along with the full user record!
  * 
  * 1. First verify accessToken and return the username from the accessToken if it is valid
  * 2. If accessToken is invalid, then first make sure that the user supplied a refreshToken. If there is no refresh
@@ -113,6 +110,9 @@ function verifyRefreshToken(refreshToken: string): RefreshTokenData {
  *    that is supplied via the JWT. If the two versions don't match, then we will have to send a 401. 
  * 4. If all of these check out, we can then return the username and the user record. 
  * 
+ *  * NOTE!!! If we are able to verify an accessToken, checkTokens will only return a username. 
+ *  If we end up having to verify a refreshToken, then checkTokens will return the username 
+ *  along with the full user record!
  * 
  * What still needs to be addressed
  *  - I am not currently handling a potential mongoError within checkTokens 

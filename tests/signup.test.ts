@@ -1,6 +1,5 @@
 import Client from './client';
 import UserRequests from './data';
-import { TEST_createUser } from './test-functions';
 import {
   deleteCollections,
   closeMongoConnection,
@@ -8,7 +7,7 @@ import {
   disconnectMongoose,
 } from './test-env-managers';
 import { HttpStatusCode, FormFields, JoiErrorTypes } from '../src/types';
-import { User } from '../src/models/User';
+import { TEST_createUser } from './test-functions'
 
 const testClient = new Client();
 
@@ -43,6 +42,25 @@ describe('Tests a successful signup with Bonsai-Org', () => {
     expect(tokens?.length).toBe(2)
   })
 });
+
+describe('Tests that the server properly rejects an existing user from signing up', () => {
+  beforeAll(async () => {
+    await deleteCollections(['users'])
+    await TEST_createUser(UserRequests.GOOD_USER)
+  })
+  test('Rejects a user with existing username from signing up', async () => {
+    let response = await testClient.signup(UserRequests.SAME_USERNAME_DIFF_EMAIL_USER)
+    expect(response.status).toBe(HttpStatusCode.Conflict)
+  })
+  test('Rejects a user with existing email from signing up', async () => {
+    let response = await testClient.signup(UserRequests.SAME_EMAIL_DIFF_USERNAME_USER)
+    expect(response.status).toBe(HttpStatusCode.Conflict)
+  })
+  test('Rejects a user with existing username and email from signing up', async () => {
+    let response = await testClient.signup(UserRequests.GOOD_USER)
+    expect(response.status).toBe(HttpStatusCode.Conflict)
+  })
+})
 
 describe('Tests that the server properly rejects illegal user input', () => {
   describe('Test that the server properly handles requests where one or more inputs are not supplied', () => {
@@ -93,7 +111,7 @@ describe('Tests that the server properly rejects illegal user input', () => {
     });
   })
 
-  describe('Test that the server properly rejects requests with invalid user input ', () => {
+  describe('Test that the server properly rejects requests that fail input validation requirements', () => {
     test('Rejects a request to signup with a username that is shorter than 8 characters', async () => {
       let response = await testClient.signup(UserRequests.USERNAME_TOO_SHORT_USER)
       expect(response.status).toBe(HttpStatusCode.BadRequest)

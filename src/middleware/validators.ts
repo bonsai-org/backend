@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from '../types';
-import { formatErrorResponse } from '../utils/joi';
+import { __dev__ } from '../utils/constants';
 import { loginValidation, signupValidation } from '../models/joi-schemas/controllers';
+import { formatErrorMessage } from '../utils/client-response-formatters'
 
 export function validateSignup(
   req: Request,
@@ -12,9 +13,10 @@ export function validateSignup(
     abortEarly: false,
   });
   if (error) {
+    if (__dev__) { console.log(formatErrorMessage(error)) }
     return res
       .status(HttpStatusCode.BadRequest)
-      .json({ errors: formatErrorResponse(error.details) });
+      .json({ errors: formatErrorMessage(error) });
   }
   req.signupRequest = {
     username: value.username,

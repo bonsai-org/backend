@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: . 
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      # Note that REFRESH_TOKEN_SECRET and ACCESS_TOKEN_SECRET are random values
+      # that are not used in production
+      MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
+      PORT : "3000"
+      NODE_ENV: "dev"
+      REFRESH_TOKEN_SECRET: "UYzCnj0exk8K3WIku4xrNbdFdiR0piRYSMMK1PI7ndSQ3DgIGgPjQcvI/KROFbB1CZD8V+5myqjYMXaGpHPlLg=="
+      ACCESS_TOKEN_SECRET: "+gseK9cQ1TDN53RXNfKZrsTOyJoGcD9qK3Mx0VSdoc2jNygFPVHwuSrwWmns7IPiPT+1gwaV/FZ3O/GpevfwWg=="
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+    depends_on:
+      - mongodb
+    command: npx nodemon --exec node --inspect=0.0.0.0:9229 -r ts-node/register ./src/bin/main.ts
+    
+  mongodb:
+    image: "mongodb/mongodb-community-server:latest"
+    ports:
+      - "27017:27017"

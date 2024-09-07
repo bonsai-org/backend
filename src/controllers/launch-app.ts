@@ -6,8 +6,8 @@ export function launchApplication(
   res: Response,
   next: NextFunction,
 ) {
-  if (req.loggedIn === true) {
-    return res.status(HttpStatusCode.Ok).json({ loggedIn: true });
+  if (req.loggedIn === true && typeof req.username === 'string') {
+    return res.status(HttpStatusCode.Ok).json({ loggedIn: true, username: req.username });
   }
-  return res.status(HttpStatusCode.Unauthorized).redirect('/login');
+  return res.status(HttpStatusCode.Unauthorized).json({ loggedIn: false });
 }

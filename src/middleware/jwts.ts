@@ -172,10 +172,10 @@ export async function checkTokensMiddleware(
   next: NextFunction,
 ): Promise<void> {
   try {
-    debugger;
     let { accessToken, refreshToken } = getCookieValues(req);
-    await checkTokens(accessToken, refreshToken, res);
+    let { username } = await checkTokens(accessToken, refreshToken, res);
     req.loggedIn = true;
+    req.username = username
     return next();
   } catch (error) {
     if (error instanceof AuthError) {

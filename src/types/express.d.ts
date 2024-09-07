@@ -9,6 +9,7 @@ declare global {
       loginRequest?: LoginRequest;
       user?: IUser;
       loggedIn?: boolean;
+      username?: string;
     }
   }
 }

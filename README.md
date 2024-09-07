@@ -45,7 +45,37 @@ initial build.
 #### POST /api/auth/login
 
 - Requires username and password fields in a request body 
+   - Valid usernames for the bonsai org must be at least 8 characters and at most 20 characters long, and can only contain alphanumeric characters (a-z, A-Z, 0-9). 
+    - Passwords for the bonsai org can contain any characters
 - Login will return two cookies that represent an access token and a refresh token upon successfully logging in
+
+    **Example client payload to /api/auth/login**
+
+    ```javascript
+    // Use javascript's fetch to query login
+    async function queryLogin() {
+      let loginResponse = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: 'henryjacobs',
+          password: 'password',
+        }),
+      })
+      return response
+    }
+    ```
+    **LOGIN EXPECTED RESPONSES**
+    - 200 Ok 
+      - Successful login 
+    - 400 Bad Request 
+      - Client has supplied invalid form input 
+    - 401 Unauthorized 
+      - Client has provided invalid credentials and has not been verified as an existing user
+    - 500 Internal Server Error 
+      - Something unexpected has happened with the backend that will not allow the client to login
 
 #### POST /api/auth/signup
 
@@ -55,39 +85,62 @@ initial build.
     - Emails must be any valid email address 
 - Signup will return two cookies that represent an access token and a refresh token if the user
 was able to successfully sign up with the supplied information
-    
-    **Example client payload to /api/auth/signup**
 
+    **Example client payload to /api/auth/signup**
     ```javascript
     // Use javascript's fetch to query signup 
     async function querySignup() {
-        let response = await fetch('http://localhost:3000/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: 'henryjacobs',
-                password: 'password',
-                confirmPassword: 'password',
-                email: 'henryjacobs@fun.com'
-            })
-        })
-        return response
+      let response = await fetch('http://localhost:3000/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: 'henryjacobs',
+          password: 'password',
+          confirmPassword: 'password',
+          email: 'henryjacobs123@fun.com'
+        }),
+      })
+      return response
     }
     ```
-
-    **Signup EXPECTED RESPONSES**
-
-    - 200 Ok - Successful sign up 
-    - 400 Bad Request - Client has supplied invalid format input 
-    - 409 Conflict - Client has supplied a username or email that conflicts with an existing user
+    **SIGNUP EXPECTED RESPONSES**
+    - 200 Ok 
+      - Successful sign up 
+    - 400 Bad Request 
+      - Client has supplied invalid form input 
+    - 409 Conflict 
+      - Client has supplied a username or email that conflicts with an existing user
+    - 500 Internal Server Error 
+      - Something unexpected has happened with the backend that will not allow the client to signup
 
 #### GET /api/auth
 
 - This is a get request that the client can make when the user first visits the application to determine if they have valid credentials. 
-- In order for this endpoint to work, the client must include cookies in the get request. 
-- If the client sends valid cookies, the endpoint will return a status of 200, with a json payload { loggedIn: true }. If the client supplies invalid credentials, it will receive a 401 status (unauthorized) and will be redirected to /login. 
+
+  **Example client payload to /api/auth/signup**
+  ```javascript
+  // Use javascript's fetch to query launch app
+  async function sendCredentials() {
+    let response = await fetch('http://localhost:3000/api/auth', {
+      method: 'GET',
+      credentials: 'include'
+    })
+    return response
+  }
+  ```
+  **LAUNCH APP EXPECTED RESPONSES**
+  - 200 Ok 
+    - Client has sent valid credentials and is authenticated. 
+    - JSON Payload: ```{ loggedIn: true, username: someUsername }```
+  - 401 Unauthorized
+    - Client has sent invalid credentials and has not been authenticated. 
+    - JSON Payload: ```{ loggedIn: false }```
+    - Client side routing should direct client to login page 
+  - 500 Internal Server Error 
+    - Something unexpected has happened with the backend that will not allow the client to signup
+  
 
 # Important Stuff
 

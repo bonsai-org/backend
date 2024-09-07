@@ -175,7 +175,7 @@ export async function checkTokensMiddleware(
     let { accessToken, refreshToken } = getCookieValues(req);
     let { username } = await checkTokens(accessToken, refreshToken, res);
     req.loggedIn = true;
-    req.username = username
+    req.username = username;
     return next();
   } catch (error) {
     if (error instanceof AuthError) {

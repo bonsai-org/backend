@@ -3,6 +3,7 @@
 import Express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import userRouter from './routes/user';
 import authRouter from './routes/auth';
 import router from './routes/bonsai';
@@ -19,6 +20,12 @@ app.use(Express.json());
 if (process.env.NODE_ENV === 'dev') {
   app.use(morgan('dev'));
   app.use(Express.urlencoded({ extended: true }));
+  app.use(
+    cors({
+      origin: ['http://localhost:5173'],
+      credentials: true,
+    }),
+  );
 }
 
 app.use('/api/user', userRouter);

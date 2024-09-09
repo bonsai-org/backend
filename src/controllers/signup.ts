@@ -146,7 +146,8 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)
-      .json({ message: 'Welcome to bonsai org!' });
+      .json({ username: user.username })
+      .send();
   } catch (error) {
     if (error instanceof SignUpError) {
       if (

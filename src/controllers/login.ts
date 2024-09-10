@@ -72,7 +72,10 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     let user = await checkIfUserExists(username);
     await validatePassword(password, user.password, user.username);
     sendAuthTokens(res, user);
-    return res.sendStatus(200);
+    return res
+      .status(HttpStatusCode.Ok)
+      .json({ username: user.username, profilePhoto: user.profilePhoto || '' })
+      .send();
   } catch (error) {
     if (error instanceof LoginError) {
       console.log(error.message);

@@ -74,7 +74,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)
-      .json({ username: user.username })
+      .json({ username: user.username, profilePhoto: user.profilePhoto || '' })
       .send();
   } catch (error) {
     if (error instanceof LoginError) {

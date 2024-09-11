@@ -11,7 +11,7 @@ export interface IUser {
   refreshToken: number;
 }
 
-export interface Bonsai {
+export interface IBonsai {
   user: Types.ObjectId;
   bonsaiChapters: Types.ObjectId[];
   hardiness_zone: string;
@@ -22,7 +22,7 @@ export interface Bonsai {
   species: string;
 }
 
-export interface BonsaiChapter {
+export interface IBonsaiChapter {
   photoUrls: string[];
   bonsai: Types.ObjectId;
   date: Date;

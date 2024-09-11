@@ -75,7 +75,6 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     return res
       .status(HttpStatusCode.Ok)
       .json({ username: user.username, profilePhoto: user.profilePhoto || '' })
-      .send();
   } catch (error) {
     if (error instanceof LoginError) {
       console.log(error.message);

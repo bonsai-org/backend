@@ -46,6 +46,13 @@ describe('Tests that an existing user is able to successfully login to bonsai or
     expect(tokens).toBeDefined();
     expect(tokens?.length).toBe(2);
   });
+  test('Receives username and empty profilePhoto string as json response', async () => {
+    let response = await testClient.login(UserRequests.GOOD_USER)
+    let data: { username?: string, profilePhoto?: string } | null = response.data
+    expect(data).not.toBeNull()
+    expect(data?.profilePhoto).toBe('')
+    expect(data?.username).toBe(UserRequests.GOOD_USER.username)
+  })
 });
 
 describe('Tests that invalid requests made to login are properly rejected', () => {

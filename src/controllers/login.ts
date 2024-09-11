@@ -3,7 +3,7 @@ import { User } from '../models/User';
 import { HttpStatusCode, LoginRequest } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
 import { LoginError } from '../errors/application-errors/login-error';
-import { IUser } from '../types/schemas';
+import { SuccessfulQuery, IUser } from '../types/schemas';
 import { compare } from 'bcrypt';
 import { InternalApiError } from '../errors/internalApiError';
 import { MongoError } from '../errors/mongo-error';
@@ -27,8 +27,8 @@ function getLoginVariables(req: Request): LoginRequest {
  * returns that user if so
  */
 
-async function checkIfUserExists(username: string): Promise<IUser> {
-  let { user, error } = await User.findByUsername(username);
+async function checkIfUserExists(username: string): Promise<SuccessfulQuery<IUser>> {
+  let { data, error } = await User.findByUsername(username);
   if (error) {
     throw new MongoError({
       name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
@@ -36,14 +36,14 @@ async function checkIfUserExists(username: string): Promise<IUser> {
       stack: error,
     });
   }
-  if (user === null) {
+  if (data === null) {
     throw new LoginError({
       name: 'NON_EXISTENT_USER',
       message: `No user exists with given username ${username}`,
       level: 'Info',
     });
   }
-  return user;
+  return data;
 }
 
 /*

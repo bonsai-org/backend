@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { Bonsai } from '../../types/schemas';
+import { IBonsai } from '../../types/schemas';
 
-const BonsaiSchema = new Schema<Bonsai>(
+const BonsaiSchema = new Schema<IBonsai>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     bonsaiChapters: [

@@ -1,6 +1,6 @@
+import { MongoDocumentQuery } from '../types/schemas';
 import { IUser } from '../types/schemas';
 import { UserModel } from './schemas/user';
-import { UserQuery } from '../types';
 import { UserQueries } from './queries/user';
 
 export class User extends UserModel {
@@ -14,30 +14,30 @@ export class User extends UserModel {
     });
   }
 
-  static async findByUsername(username: string): Promise<UserQuery> {
+  static async findByUsername(username: string): Promise<MongoDocumentQuery<IUser>> {
     try {
       let user = await UserQueries.queryByUsername(username);
       if (user !== null) {
-        return { user, error: null };
+        return { data: user, error: null };
       }
-      return { user: null, error: null };
+      return { data: null, error: null };
     } catch (error) {
-      return { user: null, error };
+      return { data: null, error };
     }
   }
 
   static async findByEmailOrUsername(
     username: string,
     email: string,
-  ): Promise<UserQuery> {
+  ): Promise<MongoDocumentQuery<IUser>> {
     try {
       let user = await UserQueries.queryByEmailOrUsername(username, email);
       if (user !== null) {
-        return { user, error: null };
+        return { data: user, error: null };
       }
-      return { user: null, error: null };
+      return { data: null, error: null };
     } catch (error) {
-      return { user: null, error };
+      return { data: null, error };
     }
   }
 }

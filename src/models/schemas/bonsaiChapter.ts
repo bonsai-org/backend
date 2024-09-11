@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { BonsaiChapter } from '../../types/schemas';
+import { IBonsaiChapter } from '../../types/schemas';
 
-const BonsaiChapterSchema = new Schema<BonsaiChapter>(
+const BonsaiChapterSchema = new Schema<IBonsaiChapter>(
   {
     photoUrls: [{ type: Schema.Types.String, maxLength: 200, required: true }],
     bonsai: { type: Schema.Types.ObjectId, ref: 'Bonsai', required: true },

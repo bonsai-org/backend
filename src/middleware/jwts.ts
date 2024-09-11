@@ -147,22 +147,22 @@ export async function checkTokens(
     });
   }
   let refreshTokenData = verifyRefreshToken(refreshToken);
-  let { user, error } = await User.findByUsername(refreshTokenData.username);
-  if (user === null) {
+  let { data, error } = await User.findByUsername(refreshTokenData.username);
+  if (data === null) {
     throw new AuthError({
       name: 'USER_NOT_FOUND_FROM_REFRESH',
       message: 'Unable to find user with username supplied via refresh token',
     });
-  } else if (refreshTokenData.refreshTokenVersion !== user.refreshToken) {
+  } else if (refreshTokenData.refreshTokenVersion !== data.refreshToken) {
     throw new AuthError({
       name: 'REFRESH_TOKEN_VERSION_MISMATCH',
       message: 'User has supplied an outdated refresh token',
     });
   }
-  sendAuthTokens(res, user);
+  sendAuthTokens(res, data);
   return {
-    username: user.username,
-    user,
+    username: data.username,
+    user: data,
   };
 }
 

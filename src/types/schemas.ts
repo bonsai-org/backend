@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Types, Document } from 'mongoose';
 
 export interface IUser {
   username: string;
@@ -27,4 +27,11 @@ export interface IBonsaiChapter {
   bonsai: Types.ObjectId;
   date: Date;
   caption: string;
+}
+
+export type MDBDocument<T> = T | null
+
+export type DocumentQuery<T> = {
+  data: T | null
+  error: unknown
 }

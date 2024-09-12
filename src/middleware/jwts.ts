@@ -2,7 +2,6 @@
 import { __prod__ } from '../utils/constants';
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../models/User';
-import { IUser } from '../types/schemas';
 import {
   RefreshTokenData,
   AccessTokenData,
@@ -11,7 +10,6 @@ import {
 } from '../types';
 import { AuthError } from '../errors/authError';
 import * as jwt from 'jsonwebtoken';
-import { InternalApiError } from '../errors/internalApiError';
 
 const cookieOpts = {
   httpOnly: true,
@@ -22,18 +20,7 @@ const cookieOpts = {
   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
 } as const;
 
-function getUserProperty(req: Request): IUser {
-  if (req.user === undefined) {
-    throw new InternalApiError({
-      name: 'REQUEST_OBJECT_MISSING_PROPERTY',
-      message:
-        'User object missing from request object when attempting to sign jwts',
-    });
-  }
-  return req.user;
-}
-
-function createAuthTokens(user: IUser): NewlyGeneratedTokens {
+function createAuthTokens(user: User): NewlyGeneratedTokens {
   let refreshToken = jwt.sign(
     { username: user.username, refreshTokenVersion: user.refreshToken },
     process.env.REFRESH_TOKEN_SECRET,
@@ -65,7 +52,7 @@ export function getCookieValues(req: Request) {
   return { accessToken: id, refreshToken: rid };
 }
 
-export function sendAuthTokens(res: Response, user: IUser) {
+export function sendAuthTokens(res: Response, user: User) {
   let { accessToken, refreshToken } = createAuthTokens(user);
   res.cookie('id', accessToken, cookieOpts);
   res.cookie('rid', refreshToken, cookieOpts);

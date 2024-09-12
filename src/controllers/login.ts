@@ -3,7 +3,6 @@ import { User } from '../models/User';
 import { HttpStatusCode, LoginRequest } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
 import { LoginError } from '../errors/application-errors/login-error';
-import { SuccessfulQuery, IUser } from '../types/schemas';
 import { compare } from 'bcrypt';
 import { InternalApiError } from '../errors/internalApiError';
 import { MongoError } from '../errors/mongo-error';
@@ -27,7 +26,7 @@ function getLoginVariables(req: Request): LoginRequest {
  * returns that user if so
  */
 
-async function checkIfUserExists(username: string): Promise<SuccessfulQuery<IUser>> {
+async function checkIfUserExists(username: string): Promise<User> {
   let { data, error } = await User.findByUsername(username);
   if (error) {
     throw new MongoError({

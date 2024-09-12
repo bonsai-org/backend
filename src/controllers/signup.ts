@@ -5,7 +5,6 @@ import { MongoError } from '../errors/mongo-error';
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from '../types/schemas';
 import { InternalApiError } from '../errors/internalApiError';
 import { sendAuthTokens } from '../middleware/jwts';
 

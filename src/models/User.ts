@@ -1,4 +1,4 @@
-import { MongoDocumentQuery } from '../types/schemas';
+import { DocumentQuery } from '../types/schemas';
 import { IUser } from '../types/schemas';
 import { UserModel } from './schemas/user';
 import { UserQueries } from './queries/user';
@@ -14,7 +14,7 @@ export class User extends UserModel {
     });
   }
 
-  static async findByUsername(username: string): Promise<MongoDocumentQuery<IUser>> {
+  static async findByUsername(username: string): Promise<DocumentQuery<User>> {
     try {
       let user = await UserQueries.queryByUsername(username);
       if (user !== null) {
@@ -29,7 +29,7 @@ export class User extends UserModel {
   static async findByEmailOrUsername(
     username: string,
     email: string,
-  ): Promise<MongoDocumentQuery<IUser>> {
+  ): Promise<DocumentQuery<User>> {
     try {
       let user = await UserQueries.queryByEmailOrUsername(username, email);
       if (user !== null) {

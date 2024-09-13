@@ -43,11 +43,11 @@ export async function TEST_createUser(testUserData: TestUser): Promise<User> {
   ) {
     throw new Error('No test variables passed');
   }
-  let { user, error } = await User.findByEmailOrUsername(
+  let { data, error } = await User.findByEmailOrUsername(
     testUserData.username as string,
     testUserData.email as string,
   );
-  if (user) {
+  if (data) {
     throw new Error('User already exists in database');
   }
   let hashedPassword = await hash(testUserData.password, 12);

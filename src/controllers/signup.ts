@@ -5,7 +5,6 @@ import { MongoError } from '../errors/mongo-error';
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from '../types/schemas';
 import { InternalApiError } from '../errors/internalApiError';
 import { sendAuthTokens } from '../middleware/jwts';
 
@@ -50,7 +49,7 @@ async function checkIfUserExists(
   username: string,
   email: string,
 ): Promise<void> {
-  let { user, error } = await User.findByEmailOrUsername(username, email);
+  let { data, error } = await User.findByEmailOrUsername(username, email);
   if (error) {
     throw new MongoError({
       name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
@@ -58,20 +57,20 @@ async function checkIfUserExists(
       stack: error,
     });
   }
-  if (user) {
-    if (user.username === username && user.email === email) {
+  if (data) {
+    if (data.username === username && data.email === email) {
       throw new SignUpError({
         name: 'USERNAME_AND_EMAIL_IN_USE',
         message: 'Username and email in use by an existing user',
         level: 'Info',
       });
-    } else if (user.username === username) {
+    } else if (data.username === username) {
       throw new SignUpError({
         name: 'USERNAME_IN_USE',
         message: 'Username in use by an existing user',
         level: 'Info',
       });
-    } else if (user.email === email) {
+    } else if (data.email === email) {
       throw new SignUpError({
         name: 'EMAIL_IN_USE',
         message: 'Email in use by an existing user',

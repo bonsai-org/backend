@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Types, Document } from 'mongoose';
 
 export interface IUser {
   username: string;
@@ -11,7 +11,7 @@ export interface IUser {
   refreshToken: number;
 }
 
-export interface Bonsai {
+export interface IBonsai {
   user: Types.ObjectId;
   bonsaiChapters: Types.ObjectId[];
   hardiness_zone: string;
@@ -22,9 +22,16 @@ export interface Bonsai {
   species: string;
 }
 
-export interface BonsaiChapter {
+export interface IBonsaiChapter {
   photoUrls: string[];
   bonsai: Types.ObjectId;
   date: Date;
   caption: string;
+}
+
+export type MDBDocument<T> = T | null
+
+export type DocumentQuery<T> = {
+  data: T | null
+  error: unknown
 }

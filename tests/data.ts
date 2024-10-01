@@ -1,4 +1,4 @@
-import { IUser } from '../src/types/schemas';
+import { IUser } from "../models/types";
 
 export type TestUser = {
   username?: string;

@@ -4,7 +4,7 @@ import { __dev__ } from '../utils/constants';
 import {
   loginValidation,
   signupValidation,
-} from '../models/joi-schemas/controllers';
+} from '../data/joi-schemas/controllers';
 import { formatErrorMessage } from '../utils/client-response-formatters';
 
 export function validateSignup(

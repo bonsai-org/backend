@@ -1,4 +1,4 @@
-import { IUser } from './schemas';
+import { User } from "../data/User";
 
 type NodeEnvironments = 'prod' | 'dev' | 'stage';
 
@@ -147,7 +147,7 @@ export type NewlyGeneratedTokens = {
 
 export type AuthorizedTokenData = {
   username: string;
-  user?: IUser;
+  user?: User;
 };
 
 export type validationErrorResponse = {
@@ -162,7 +162,7 @@ export enum FormFields {
 }
 
 export type UserQuery = {
-  user: IUser | null;
+  user: User | null;
   error: unknown;
 };
 

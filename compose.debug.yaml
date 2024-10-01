@@ -15,8 +15,8 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./src
-          target: /app/src
+          path: .
+          target: /app
     depends_on:
       - mongodb
     command: npx nodemon --exec node --inspect=0.0.0.0:9229 -r ts-node/register ./src/bin/main.ts

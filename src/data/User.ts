@@ -15,7 +15,7 @@ export class User extends UserModel {
 
   static async getByUsername(queryParams: { username: string }): Promise<User | null> {
     try {
-      let user = await User.findOne({ username: queryParams.username })
+      let user = await UserModel.findOne({ username: queryParams.username })
       return user
     } catch (error) {
       throw new MongoError({
@@ -28,7 +28,7 @@ export class User extends UserModel {
 
   static async getByEmail(queryParams: { email: string }): Promise<User | null> {
     try {
-      let user = await User.findOne({ email: queryParams.email })
+      let user = await UserModel.findOne({ email: queryParams.email })
       return user
     } catch (error) {
       throw new MongoError({
@@ -41,7 +41,7 @@ export class User extends UserModel {
 
   static async getByEmailorUsername(queryParams: { email: string, username: string }) {
     try {
-      let user = await User.findOne({
+      let user = await UserModel.findOne({
         $or: [
           { username: queryParams.username },
           { email: queryParams.email }

@@ -1,4 +1,4 @@
-import { User } from '../models/User';
+import { User } from '../data/User';
 import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup-error';
 import { MongoError } from '../errors/mongo-error';
@@ -49,28 +49,21 @@ async function checkIfUserExists(
   username: string,
   email: string,
 ): Promise<void> {
-  let { data, error } = await User.findByEmailOrUsername(username, email);
-  if (error) {
-    throw new MongoError({
-      name: 'FAILED_TO_LOOK_UP_EXISTING_USER',
-      message: `Failed to query mongoDB for username ${username} and email ${email}`,
-      stack: error,
-    });
-  }
-  if (data) {
-    if (data.username === username && data.email === email) {
+  let user = await User.getByEmailorUsername({ username, email })
+  if (user) {
+    if (user.username === username && user.email === email) {
       throw new SignUpError({
         name: 'USERNAME_AND_EMAIL_IN_USE',
         message: 'Username and email in use by an existing user',
         level: 'Info',
       });
-    } else if (data.username === username) {
+    } else if (user.username === username) {
       throw new SignUpError({
         name: 'USERNAME_IN_USE',
         message: 'Username in use by an existing user',
         level: 'Info',
       });
-    } else if (data.email === email) {
+    } else if (user.email === email) {
       throw new SignUpError({
         name: 'EMAIL_IN_USE',
         message: 'Email in use by an existing user',
@@ -139,6 +132,7 @@ export async function createUser(
 export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
     let { username, password, email } = getSignupVariables(req);
+    console.log(`username`, password, email)
     await checkIfUserExists(username, email);
     let hashedPassword = await hashPassword(password, 12);
     let user = await createUser(username, hashedPassword, email);

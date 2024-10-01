@@ -1,7 +1,7 @@
 /// <reference types="../types/express.d.ts" />
 import { __prod__ } from '../utils/constants';
 import { NextFunction, Request, Response } from 'express';
-import { User } from '../models/User';
+import { User } from '../data/User';
 import {
   RefreshTokenData,
   AccessTokenData,
@@ -134,22 +134,22 @@ export async function checkTokens(
     });
   }
   let refreshTokenData = verifyRefreshToken(refreshToken);
-  let { data, error } = await User.findByUsername(refreshTokenData.username);
-  if (data === null) {
+  let user = await User.getByUsername({ username: refreshTokenData.username })
+  if (user === null) {
     throw new AuthError({
       name: 'USER_NOT_FOUND_FROM_REFRESH',
       message: 'Unable to find user with username supplied via refresh token',
     });
-  } else if (refreshTokenData.refreshTokenVersion !== data.refreshToken) {
+  } else if (refreshTokenData.refreshTokenVersion !== user.refreshToken) {
     throw new AuthError({
       name: 'REFRESH_TOKEN_VERSION_MISMATCH',
       message: 'User has supplied an outdated refresh token',
     });
   }
-  sendAuthTokens(res, data);
+  sendAuthTokens(res, user);
   return {
-    username: data.username,
-    user: data,
+    username: user.username,
+    user: user,
   };
 }
 

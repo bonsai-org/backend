@@ -1,6 +1,6 @@
 import { DocumentQuery } from '../types/schemas';
 import { IUser } from '../types/schemas';
-import { UserModel } from './schemas/user';
+import { UserModel } from '../../models/user';
 import { UserQueries } from './queries/user';
 
 export class User extends UserModel {

@@ -1,5 +1,5 @@
 import { MDBDocument } from '../../types/schemas';
-import { UserModel } from '../schemas/user';
+import { UserModel } from '../../../models/user';
 import { User } from '../User';
 
 export class UserQueries extends UserModel {

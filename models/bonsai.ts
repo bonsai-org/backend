@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IBonsai } from '../../types/schemas';
+import { IBonsai } from './types';
 
 const BonsaiSchema = new Schema<IBonsai>(
   {

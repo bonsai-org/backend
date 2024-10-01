@@ -8,7 +8,7 @@ import {
 } from './test-env-managers';
 import { HttpStatusCode, FormFields, JoiErrorTypes } from '../src/types';
 import { TEST_createUser } from './test-functions';
-import { User } from '../src/models/User';
+import { User } from '../src/data/User';
 
 const testClient = new Client();
 

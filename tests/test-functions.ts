@@ -3,8 +3,8 @@
  * with Data libraries used to test the bonsai backend
  */
 
-import { IUser } from '../src/types/schemas';
-import { User } from '../src/models/User';
+import { IUser } from '../models/types';
+import { User } from '../src/data/User';
 import UserRequests from './data';
 import { v4 as uuidv4 } from 'uuid';
 import { hash } from 'bcrypt';
@@ -43,11 +43,11 @@ export async function TEST_createUser(testUserData: TestUser): Promise<User> {
   ) {
     throw new Error('No test variables passed');
   }
-  let { data, error } = await User.findByEmailOrUsername(
-    testUserData.username as string,
-    testUserData.email as string,
-  );
-  if (data) {
+  let user = await User.getByEmailorUsername({
+    username: testUserData.username as string,
+    email: testUserData.email as string
+  })
+  if (user) {
     throw new Error('User already exists in database');
   }
   let hashedPassword = await hash(testUserData.password, 12);

@@ -1,7 +1,6 @@
-import { DocumentQuery } from '../types/schemas';
-import { IUser } from '../types/schemas';
+import { IUser } from '../../models/types';
 import { UserModel } from '../../models/user';
-import { UserQueries } from './queries/user';
+import { MongoError } from '../errors/mongo-error';
 
 export class User extends UserModel {
   constructor({ username, password, email, UUID, refreshToken }: IUser) {
@@ -14,30 +13,47 @@ export class User extends UserModel {
     });
   }
 
-  static async findByUsername(username: string): Promise<DocumentQuery<User>> {
+  static async getByUsername(queryParams: { username: string }): Promise<User | null> {
     try {
-      let user = await UserQueries.queryByUsername(username);
-      if (user !== null) {
-        return { data: user, error: null };
-      }
-      return { data: null, error: null };
+      let user = await User.findOne({ username: queryParams.username })
+      return user
     } catch (error) {
-      return { data: null, error };
+      throw new MongoError({
+        name: 'READ_FAILED',
+        message: 'Read failed in User.getByUsername',
+        stack: error
+      })
     }
   }
 
-  static async findByEmailOrUsername(
-    username: string,
-    email: string,
-  ): Promise<DocumentQuery<User>> {
+  static async getByEmail(queryParams: { email: string }): Promise<User | null> {
     try {
-      let user = await UserQueries.queryByEmailOrUsername(username, email);
-      if (user !== null) {
-        return { data: user, error: null };
-      }
-      return { data: null, error: null };
+      let user = await User.findOne({ email: queryParams.email })
+      return user
     } catch (error) {
-      return { data: null, error };
+      throw new MongoError({
+        name: 'READ_FAILED',
+        message: 'Read failed in User.getByEmail',
+        stack: error
+      })
+    }
+  }
+
+  static async getByEmailorUsername(queryParams: { email: string, username: string }) {
+    try {
+      let user = await User.findOne({
+        $or: [
+          { username: queryParams.username },
+          { email: queryParams.email }
+        ]
+      })
+      return user
+    } catch (error) {
+      throw new MongoError({
+        name: 'READ_FAILED',
+        message: 'Read failed in User.getByEmailOrUsername',
+        stack: error
+      })
     }
   }
 }

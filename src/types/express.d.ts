@@ -1,13 +1,13 @@
 import * as express from 'express';
 import { SignUpRequest, LoginRequest } from './index';
-import { IUser } from './schemas';
+import { UserDocument } from '../data/types'
 
 declare global {
   namespace Express {
     interface Request {
       signupRequest: SignUpRequest;
       loginRequest: LoginRequest;
-      user: IUser;
+      user: UserDocument;
       loggedIn: boolean;
       username: string;
     }

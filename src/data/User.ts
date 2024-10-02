@@ -1,19 +1,30 @@
-import { IUser } from '../../models/types';
 import { UserModel } from '../../models/user';
+import { UserDocument, UserQuery } from './types';
 import { MongoError } from '../errors/mongo-error';
+import { v4 as uuidv4 } from 'uuid';
 
-export class User extends UserModel {
-  constructor({ username, password, email, UUID, refreshToken }: IUser) {
-    super({
-      username,
-      password,
-      email,
-      UUID,
-      refreshToken,
-    });
+export class User {
+  static async createUser(queryParams: { username: string, email: string, hashedPassword: string }): Promise<UserDocument> {
+    try {
+      let newUser = new UserModel({
+        username: queryParams.username,
+        password: queryParams.hashedPassword,
+        email: queryParams.email,
+        UUID: uuidv4(),
+        refreshToken: 1
+      })
+      await newUser.save()
+      return newUser
+    } catch (error) {
+      throw new MongoError({
+        name: 'WRITE_FAILED',
+        message: 'Write failed in User.createUser',
+        stack: error
+      })
+    }
   }
 
-  static async getByUsername(queryParams: { username: string }): Promise<User | null> {
+  static async getByUsername(queryParams: { username: string }): Promise<UserQuery> {
     try {
       let user = await UserModel.findOne({ username: queryParams.username })
       return user
@@ -26,7 +37,7 @@ export class User extends UserModel {
     }
   }
 
-  static async getByEmail(queryParams: { email: string }): Promise<User | null> {
+  static async getByEmail(queryParams: { email: string }): Promise<UserQuery> {
     try {
       let user = await UserModel.findOne({ email: queryParams.email })
       return user
@@ -39,7 +50,7 @@ export class User extends UserModel {
     }
   }
 
-  static async getByEmailorUsername(queryParams: { email: string, username: string }) {
+  static async getByEmailorUsername(queryParams: { email: string, username: string }): Promise<UserQuery> {
     try {
       let user = await UserModel.findOne({
         $or: [

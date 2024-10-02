@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { SignUpError } from '../errors/application-errors/signup';
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
-import { v4 as uuidv4 } from 'uuid';
 import { InternalApiError } from '../errors/internalApiError';
 import { sendAuthTokens } from '../middleware/jwts';
 
@@ -90,22 +89,6 @@ async function hashPassword(password: string, rounds: number): Promise<string> {
   }
 }
 
-export async function createUser(
-  username: string,
-  hashedPassword: string,
-  email: string,
-): Promise<User> {
-  let user = new User({
-    username,
-    password: hashedPassword,
-    email,
-    UUID: uuidv4(),
-    refreshToken: 1,
-  });
-  await user.save();
-  return user;
-}
-
 /*
  * The signup function signs a user up for an account, given that there are no
  * users that already exist in the database with the supplied username and email.
@@ -120,10 +103,9 @@ export async function createUser(
 export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
     let { username, password, email } = getSignupVariables(req);
-    console.log(`username`, password, email)
     await checkIfUserExists(username, email);
     let hashedPassword = await hashPassword(password, 12);
-    let user = await createUser(username, hashedPassword, email);
+    let user = await User.createUser({ username, hashedPassword, email })
     sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)

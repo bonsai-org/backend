@@ -1,7 +1,6 @@
 import { User } from '../data/User';
 import { Request, Response, NextFunction } from 'express';
-import { SignUpError } from '../errors/application-errors/signup-error';
-import { MongoError } from '../errors/mongo-error';
+import { SignUpError } from '../errors/application-errors/signup';
 import { genSalt, hash } from 'bcrypt';
 import { HttpStatusCode, SignUpRequest } from '../types';
 import { v4 as uuidv4 } from 'uuid';
@@ -55,19 +54,16 @@ async function checkIfUserExists(
       throw new SignUpError({
         name: 'USERNAME_AND_EMAIL_IN_USE',
         message: 'Username and email in use by an existing user',
-        level: 'Info',
       });
     } else if (user.username === username) {
       throw new SignUpError({
         name: 'USERNAME_IN_USE',
         message: 'Username in use by an existing user',
-        level: 'Info',
       });
     } else if (user.email === email) {
       throw new SignUpError({
         name: 'EMAIL_IN_USE',
         message: 'Email in use by an existing user',
-        level: 'Info',
       });
     }
   }
@@ -99,23 +95,15 @@ export async function createUser(
   hashedPassword: string,
   email: string,
 ): Promise<User> {
-  try {
-    let user = new User({
-      username,
-      password: hashedPassword,
-      email,
-      UUID: uuidv4(),
-      refreshToken: 1,
-    });
-    await user.save();
-    return user;
-  } catch (error) {
-    throw new MongoError({
-      name: 'FAILED_TO_SAVE_NEW_USER',
-      message: 'Failed to create new user document during signup',
-      stack: error,
-    });
-  }
+  let user = new User({
+    username,
+    password: hashedPassword,
+    email,
+    UUID: uuidv4(),
+    refreshToken: 1,
+  });
+  await user.save();
+  return user;
 }
 
 /*

@@ -2,6 +2,7 @@
 import { __prod__ } from '../utils/constants';
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../data/User';
+import { UserDocument } from '../data/types'
 import {
   RefreshTokenData,
   AccessTokenData,
@@ -20,7 +21,7 @@ const cookieOpts = {
   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
 } as const;
 
-function createAuthTokens(user: User): NewlyGeneratedTokens {
+function createAuthTokens(user: UserDocument): NewlyGeneratedTokens {
   let refreshToken = jwt.sign(
     { username: user.username, refreshTokenVersion: user.refreshToken },
     process.env.REFRESH_TOKEN_SECRET,
@@ -52,7 +53,7 @@ export function getCookieValues(req: Request) {
   return { accessToken: id, refreshToken: rid };
 }
 
-export function sendAuthTokens(res: Response, user: User) {
+export function sendAuthTokens(res: Response, user: UserDocument) {
   let { accessToken, refreshToken } = createAuthTokens(user);
   res.cookie('id', accessToken, cookieOpts);
   res.cookie('rid', refreshToken, cookieOpts);

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../data/User';
+import { UserDocument } from '../data/types';
 import { HttpStatusCode, LoginRequest } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
 import { LoginError } from '../errors/application-errors/login-error';
@@ -25,7 +26,7 @@ function getLoginVariables(req: Request): LoginRequest {
  * returns that user if so
  */
 
-async function checkIfUserExists(username: string): Promise<User> {
+async function checkIfUserExists(username: string): Promise<UserDocument> {
   let user = await User.getByUsername({ username })
   if (user === null) {
     throw new LoginError({

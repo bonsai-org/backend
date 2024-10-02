@@ -1,5 +1,5 @@
-import { BaseError } from '../baseError';
 import { LogLevels } from '../../types';
+import { ApplicationError } from './application-error';
 
 type ErrorName =
   | 'USERNAME_IN_USE'
@@ -9,23 +9,20 @@ type ErrorName =
   | 'PASSWORD_HASH_ERROR'
   | 'MISSING_REQUIRED_FIELDS';
 
-export class SignUpError extends BaseError<ErrorName> {
+export class SignUpError extends ApplicationError<ErrorName> {
   constructor({
     name,
     message,
     stack,
-    level,
   }: {
     name: ErrorName;
     message: string;
     stack?: any;
-    level: LogLevels;
   }) {
     super({
       name,
       message,
       stack,
-      level,
     });
   }
 }

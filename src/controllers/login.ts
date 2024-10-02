@@ -3,7 +3,7 @@ import { User } from '../data/User';
 import { UserDocument } from '../data/types';
 import { HttpStatusCode, LoginRequest } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
-import { LoginError } from '../errors/application-errors/login-error';
+import { LoginError } from '../errors/application-errors/login';
 import { compare } from 'bcrypt';
 import { InternalApiError } from '../errors/internalApiError';
 
@@ -32,7 +32,6 @@ async function checkIfUserExists(username: string): Promise<UserDocument> {
     throw new LoginError({
       name: 'NON_EXISTENT_USER',
       message: `No user exists with given username ${username}`,
-      level: 'Info',
     });
   }
   return user;
@@ -53,7 +52,6 @@ async function validatePassword(
     throw new LoginError({
       name: 'INVALID_PASSWORD',
       message: `${username} supplied an invalid password`,
-      level: 'Info',
     });
   }
 }

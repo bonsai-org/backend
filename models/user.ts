@@ -3,9 +3,9 @@ import { IUser } from './types';
 
 const UserSchema = new Schema<IUser>(
   {
-    username: { type: Schema.Types.String, required: true },
+    username: { type: Schema.Types.String, required: true, unique: true },
     password: { type: Schema.Types.String, required: true },
-    email: { type: Schema.Types.String, required: true },
+    email: { type: Schema.Types.String, required: true, unique: true },
     profilePhoto: { type: Schema.Types.String },
     bio: { type: Schema.Types.String, maxlength: 400 },
     bonsai: [{ type: Schema.Types.ObjectId, ref: 'Bonsai' }],

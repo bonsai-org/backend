@@ -5,11 +5,11 @@ import { IUser } from './schemas';
 declare global {
   namespace Express {
     interface Request {
-      signupRequest?: SignUpRequest;
-      loginRequest?: LoginRequest;
-      user?: IUser;
-      loggedIn?: boolean;
-      username?: string;
+      signupRequest: SignUpRequest;
+      loginRequest: LoginRequest;
+      user: IUser;
+      loggedIn: boolean;
+      username: string;
     }
   }
 }

@@ -30,6 +30,8 @@ describe('Tests that an existing user is able to successfully login to bonsai or
   });
   test('Returns a status of 200 after a successful login', async () => {
     let response = await testClient.login(UserRequests.GOOD_USER);
+    console.log(user)
+    console.log(UserRequests.GOOD_USER)
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
   test('Receives both an access token and refresh token via cookies', async () => {

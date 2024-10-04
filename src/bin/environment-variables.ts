@@ -1,6 +1,6 @@
 import process from 'process';
 import { EnvironmentVariables, UserQuery } from '../types';
-import { CriticalError } from '../errors/systemError';
+import { SystemError } from '../errors/system-errors/system-error';
 import { join } from 'path';
 import { config } from 'dotenv';
 import { formatMissingEnvVariables } from '../utils/joi';
@@ -23,7 +23,7 @@ function validateEnvironmentVariables() {
     abortEarly: false,
   });
   if (error) {
-    throw new CriticalError({
+    throw new SystemError({
       name: 'MISSING_ENVIRONMENT_VARIABLES',
       message: `Missing the following environment variables: ${formatMissingEnvVariables(error.details)}`,
       stack: error,

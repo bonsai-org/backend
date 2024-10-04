@@ -11,29 +11,6 @@ import { hash } from 'bcrypt';
 import { MongoError } from '../src/errors/mongo-error';
 import { TestUser } from './data';
 
-async function saveUser(
-  username: string,
-  hashedPassword: string,
-  email: string,
-): Promise<User> {
-  try {
-    let user = new User({
-      username,
-      password: hashedPassword,
-      email,
-      UUID: uuidv4(),
-      refreshToken: 1,
-    });
-    await user.save();
-    return user;
-  } catch (error) {
-    throw new MongoError({
-      name: 'FAILED_TO_SAVE_NEW_USER',
-      message: 'Failed to create new user document during signup',
-      stack: error,
-    });
-  }
-}
 
 export async function TEST_createUser(testUserData: TestUser): Promise<User> {
   if (
@@ -51,10 +28,10 @@ export async function TEST_createUser(testUserData: TestUser): Promise<User> {
     throw new Error('User already exists in database');
   }
   let hashedPassword = await hash(testUserData.password, 12);
-  let newUser = await saveUser(
-    testUserData.username,
-    hashedPassword,
-    testUserData.email,
-  );
+  let newUser = await User.createUser({
+    username: testUserData.username,
+    hashedPassword: testUserData.password,
+    email: testUserData.email
+  })
   return newUser;
 }

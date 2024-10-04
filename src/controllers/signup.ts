@@ -1,72 +1,10 @@
 import { User } from '../data/User';
 import { Request, Response, NextFunction } from 'express';
-import { SignUpError } from '../errors/application-errors/signup';
+import { BcryptError } from '../errors/third-party-errors/bcrypt';
 import { genSalt, hash } from 'bcrypt';
-import { HttpStatusCode, SignUpRequest } from '../types';
-import { InternalApiError } from '../errors/internalApiError';
+import { HttpStatusCode } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
-
-function getSignupVariables(req: Request): SignUpRequest {
-  let signupRequest = req.signupRequest;
-  if (
-    !signupRequest ||
-    !signupRequest.username ||
-    !signupRequest.password ||
-    !signupRequest.email
-  ) {
-    throw new InternalApiError({
-      name: 'REQUEST_OBJECT_MISSING_PROPERTY',
-      message: `Failed to construct user data from request object `,
-    });
-  }
-  return {
-    username: signupRequest.username,
-    password: signupRequest.password,
-    email: signupRequest.email,
-  };
-}
-
-/*
- * This function is responsible for checking that a user with the supplied
- * username or password from signup does not already exist in the database.
- *
- * The idea is that it first queries the DB using the User.findByEmailorUsername
- * method for a document where either the username field is equal to the supplied
- * username in req.body or the supplied email field is equal to the supplied email
- * in req.body. The User.findByEmailorUsername method will return an object that
- * contains two fields: user and error. If a user is found to having a matching
- * email address and or username, the user field will contain the document and
- * error will contain null. If no user is found, then the user field will be null and
- * error will be null, indicating that you are clear to continue signing the user up
- * for an account. If an error occurs at anytime while making the query, the user
- * field will be set to null and the error field will contain the related mongoose
- * error, which will then be propagated back to the caller.
- */
-
-async function checkIfUserExists(
-  username: string,
-  email: string,
-): Promise<void> {
-  let user = await User.getByEmailorUsername({ username, email })
-  if (user) {
-    if (user.username === username && user.email === email) {
-      throw new SignUpError({
-        name: 'USERNAME_AND_EMAIL_IN_USE',
-        message: 'Username and email in use by an existing user',
-      });
-    } else if (user.username === username) {
-      throw new SignUpError({
-        name: 'USERNAME_IN_USE',
-        message: 'Username in use by an existing user',
-      });
-    } else if (user.email === email) {
-      throw new SignUpError({
-        name: 'EMAIL_IN_USE',
-        message: 'Email in use by an existing user',
-      });
-    }
-  }
-}
+import { UserError } from '../errors/data-errors/user';
 
 /*
  * This function will take the user's plain text password as input as well
@@ -81,11 +19,11 @@ async function hashPassword(password: string, rounds: number): Promise<string> {
     let hashedPassword = await hash(password, salt);
     return hashedPassword;
   } catch (error) {
-    throw new InternalApiError({
-      name: 'BCRYPT_ERROR',
-      message: "An error occured while hashing a users' password during signup",
-      stack: error,
-    });
+    throw new BcryptError({
+      name: 'HASHING_ERROR',
+      message: `Bcrypt failed in signup's hashPassword function`,
+      stack: error
+    })
   }
 }
 
@@ -102,27 +40,20 @@ async function hashPassword(password: string, rounds: number): Promise<string> {
 
 export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
-    let { username, password, email } = getSignupVariables(req);
-    await checkIfUserExists(username, email);
+    let { username, password, email } = req.signupRequest
     let hashedPassword = await hashPassword(password, 12);
     let user = await User.createUser({ username, hashedPassword, email })
     sendAuthTokens(res, user);
     return res
       .status(HttpStatusCode.Ok)
       .json({ username: user.username, profilePhoto: user.profilePhoto || '' })
-      .send();
   } catch (error) {
-    if (error instanceof SignUpError) {
-      if (
-        error.name === 'USERNAME_IN_USE' ||
-        error.name === 'EMAIL_IN_USE' ||
-        error.name === 'USERNAME_AND_EMAIL_IN_USE'
-      ) {
+    if (error instanceof UserError) {
+      if (error.name === 'DUPLICATE_KEY') {
         return res
           .status(HttpStatusCode.Conflict)
-          .json({ message: error.message });
+          .json({ message: { duplicateKey: error.duplicateKey } })
       }
     }
-    next(error);
   }
 }

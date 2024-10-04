@@ -1,4 +1,3 @@
-import { LogLevels } from '../../types';
 import { ApplicationError } from './application-error';
 
 type ErrorName =

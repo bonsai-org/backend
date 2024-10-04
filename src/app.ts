@@ -8,9 +8,8 @@ import userRouter from './routes/user';
 import authRouter from './routes/auth';
 import router from './routes/bonsai';
 import { MongoError } from './errors/mongo-error';
-import { InternalApiError } from './errors/internalApiError';
 import { HttpStatusCode } from './types';
-import { AuthError } from './errors/authError';
+import { AuthError } from './errors/application-errors/auth';
 
 const app = Express();
 
@@ -46,7 +45,7 @@ app.use(
     res: Express.Response,
     next: Express.NextFunction,
   ) => {
-    if (err instanceof MongoError || err instanceof InternalApiError) {
+    if (err instanceof MongoError) {
       console.log(err.level);
       console.log(err.message);
       console.log(err.name);

@@ -9,7 +9,7 @@ import {
   NewlyGeneratedTokens,
   AuthorizedTokenData,
 } from '../types';
-import { AuthError } from '../errors/authError';
+import { AuthError } from '../errors/application-errors/auth';
 import * as jwt from 'jsonwebtoken';
 
 const cookieOpts = {

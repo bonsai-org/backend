@@ -5,21 +5,6 @@ import { HttpStatusCode, LoginRequest } from '../types';
 import { sendAuthTokens } from '../middleware/jwts';
 import { LoginError } from '../errors/application-errors/login';
 import { compare } from 'bcrypt';
-import { InternalApiError } from '../errors/internalApiError';
-
-function getLoginVariables(req: Request): LoginRequest {
-  let loginRequest = req.loginRequest;
-  if (!loginRequest || !loginRequest.username || !loginRequest.password) {
-    throw new InternalApiError({
-      name: 'REQUEST_OBJECT_MISSING_PROPERTY',
-      message: 'Missing request object fields in login controller',
-    });
-  }
-  return {
-    username: loginRequest.username,
-    password: loginRequest.password,
-  };
-}
 
 /*
  * Queries database to see if a user with a supplied username exists and
@@ -58,7 +43,7 @@ async function validatePassword(
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
-    let { username, password } = getLoginVariables(req);
+    let { username, password } = req.loginRequest
     let user = await checkIfUserExists(username);
     await validatePassword(password, user.password, user.username);
     sendAuthTokens(res, user);

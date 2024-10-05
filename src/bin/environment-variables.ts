@@ -2,7 +2,6 @@ import process from 'process';
 import { EnvironmentVariables, UserQuery } from '../types';
 import { SystemError } from '../errors/system-errors/system-error';
 import { join } from 'path';
-import { config } from 'dotenv';
 import { formatMissingEnvVariables } from '../utils/joi';
 import Joi from 'joi';
 
@@ -14,9 +13,6 @@ const envVarsSchema = Joi.object<EnvironmentVariables>({
   ACCESS_TOKEN_SECRET: Joi.string().required(),
 }).unknown();
 
-function loadDotenv() {
-  config({ path: join(__dirname, '../../.env') });
-}
 
 function validateEnvironmentVariables() {
   let { error, value } = envVarsSchema.validate(process.env, {
@@ -32,9 +28,6 @@ function validateEnvironmentVariables() {
 }
 
 function loadEnvironment() {
-  if (process.env.NODE_ENV === 'local') {
-    loadDotenv();
-  }
   validateEnvironmentVariables();
 }
 

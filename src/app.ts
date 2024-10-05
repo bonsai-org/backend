@@ -31,9 +31,9 @@ app.use('/api/user', userRouter);
 app.use('/api/bonsai', router);
 app.use('/api/auth', authRouter);
 
-app.get('*', (req, res) => {
-  return res.sendStatus(HttpStatusCode.NotFound);
-});
+// app.get('*', (req, res) => {
+//   return res.sendStatus(HttpStatusCode.NotFound);
+// });
 
 // Needs some kind of persistant logging!
 // As well as some standardized way of dealing with errors :-)
@@ -51,11 +51,11 @@ app.use(
       console.log(err.name);
       err.stack ? console.log(err.level) : null;
     } else if (err instanceof AuthError) {
-      return res.sendStatus(HttpStatusCode.Unauthorized);
+      res.sendStatus(HttpStatusCode.Unauthorized);
     } else {
       console.log(err);
     }
-    return res.sendStatus(HttpStatusCode.InternalServerError);
+    res.sendStatus(HttpStatusCode.InternalServerError);
   },
 );
 

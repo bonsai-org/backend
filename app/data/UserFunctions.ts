@@ -1,17 +1,16 @@
 import { Errors } from '../errors'
 import { UserModel } from '../../models/user';
 import { UserDocument, UserQueryTypes } from './types';
-import { MongoServerErrorCodes } from '../errors/types';
+import { MongoServerErrorCodes } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
-export class MongooseUtils {
-  static extractDuplicateKey(mongoError: any) {
+class UserService {
+
+  private extractDuplicateKey(mongoError: any) {
     return Object.keys(mongoError.errorResponse.keyValue)[0]
   }
-}
 
-export class UserFunctions {
-  static async createUser(queryParams: {
+  async createUser(queryParams: {
     username: string;
     email: string;
     hashedPassword: string;
@@ -32,8 +31,8 @@ export class UserFunctions {
       ) {
         throw new Errors.DataError.UserError({
           name: 'DUPLICATE_KEY',
-          message: `Attempted to create user with duplicate field: ${MongooseUtils.extractDuplicateKey(error)}`,
-          duplicateKey: MongooseUtils.extractDuplicateKey(error)
+          message: `Attempted to create user with duplicate field: ${this.extractDuplicateKey(error)}`,
+          duplicateKey: this.extractDuplicateKey(error)
         })
       }
       throw new Errors.SystemError.DatabaseError({
@@ -44,3 +43,5 @@ export class UserFunctions {
     }
   }
 }
+
+export const UserFunctions = new UserService()

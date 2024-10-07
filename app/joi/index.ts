@@ -1,2 +1,3 @@
 export { JoiValidators } from './individual-fields'
-export { ValidationChain } from './controllers'
+export { ValidationMiddlewares } from './ValidationMiddleware'
+export { ValidationChains } from './ValidationChains'

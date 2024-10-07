@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { SignUpRequest, LoginRequest } from './types';
+import { SignUpRequest, LoginRequest } from '../types';
 import {
     username,
     password,

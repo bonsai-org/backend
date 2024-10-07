@@ -4,18 +4,9 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { StatusCodes } from 'http-status-codes'
-import { UserFunctions } from './data/UserFunctions' // delete 
+import AuthRouter from './routers/AuthRouter'
 
 const app = express()
-
-// delete 
-let requests = 0
-app.use((req, res, next) => {
-    requests += 1
-    next()
-})
-
-
 app.use(cookieParser())
 app.use(express.json())
 
@@ -29,33 +20,7 @@ if (process.env.NODE_ENV === 'dev') {
     )
 }
 
-app.post('/', async (req, res, next) => {
-    try {
-        let { username, password, email } = req.body
-        let createUser = await UserFunctions.createUser({
-            username,
-            hashedPassword: password,
-            email
-        })
-        res.send(JSON.stringify(createUser))
-        return undefined
-    } catch (error) {
-        if (error instanceof Errors.DataError.UserError) {
-            res.send(error.name)
-            return next()
-        }
-    }
-    res.send('Failed to create user')
-})
-
-app.get('/count', (req, res) => {
-    console.log(requests)
-    res.send(String(requests))
-})
-
-app.listen(process.env.PORT, () => {
-    console.log('Listening')
-})
+app.use('/api', AuthRouter)
 
 app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (
@@ -74,3 +39,5 @@ app.use((err: unknown, req: express.Request, res: express.Response, next: expres
     }
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
 })
+
+export default app

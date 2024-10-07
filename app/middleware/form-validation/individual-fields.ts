@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { EnvironmentVariables } from '../types'
+import { EnvironmentVariables } from '../../types'
 
 export const username = Joi.string()
   .min(8)

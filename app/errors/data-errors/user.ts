@@ -4,6 +4,7 @@ export type UserErrorNames =
     | 'USER_EXISTS'
     | 'USER_DOES_NOT_EXIST'
     | 'DUPLICATE_KEY'
+    | 'INVALID_CREDENTIAL'
 
 export class UserError extends DataError<UserErrorNames> {
     duplicateKey?: string

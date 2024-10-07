@@ -24,3 +24,4 @@ export class ThirdPartyError<T extends string> extends Error {
 }
 
 export { BcryptError, BcryptErrorNames } from './bcrypt'
+export { JWTError, JWTErrorNames } from './jsonwebtoken'

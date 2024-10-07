@@ -28,7 +28,7 @@ class UserQueries {
         }
     }
 
-    async getByUsername(queryParams: {
+    private async queryByUsername(queryParams: {
         username: string;
     }): Promise<UserDocument> {
         let { username } = queryParams
@@ -38,7 +38,7 @@ class UserQueries {
         )
     }
 
-    async getByEmail(queryParams: { email: string }): Promise<UserDocument> {
+    private async getByEmail(queryParams: { email: string }): Promise<UserDocument> {
         let { email } = queryParams
         return this.getQuery(
             { email },
@@ -46,7 +46,7 @@ class UserQueries {
         )
     }
 
-    async getByEmailorUsername(queryParams: { email: string, username: string }): Promise<UserDocument> {
+    private async getByEmailorUsername(queryParams: { email: string, username: string }): Promise<UserDocument> {
         let { email, username } = queryParams
         return this.getQuery(
             {
@@ -57,6 +57,20 @@ class UserQueries {
             },
             this.getByEmailorUsername
         )
+    }
+
+    async getByUsername(
+        queryParams: { username: string }
+    ): Promise<UserDocument> {
+        let { username } = queryParams
+        let user = await this.queryByUsername({ username })
+        if (!user) {
+            throw new Errors.DataError.UserError({
+                name: 'USER_DOES_NOT_EXIST',
+                message: `Failed to find user with given username ${username}`
+            })
+        }
+        return user
     }
 }
 

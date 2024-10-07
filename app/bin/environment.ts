@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import { Errors } from '../errors'
-import { JoiValidators } from '../joi'
+import { JoiValidators } from '../middleware'
 
 export default function validateEnvironment(): void {
     let { error, value } = JoiValidators.environmentVariables.validate(process.env, { abortEarly: false })

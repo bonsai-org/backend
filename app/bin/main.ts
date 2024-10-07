@@ -2,11 +2,12 @@
 /// <reference types="../express.d.ts" />
 import validateEnvironment from "./environment";
 import connectMongo from './mongo'
-import '../app' // delete me 
+import { bindApp } from "./server";
 
 async function main() {
     validateEnvironment()
-    connectMongo()
+    await connectMongo()
+    bindApp()
 }
 
 main()

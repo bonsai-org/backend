@@ -1,8 +1,8 @@
-import { Errors } from '../errors'
-import { UserModel } from '../../models/user';
+import { Errors } from '../../errors'
+import { UserModel } from '../../../models/user';
 import { UserQuery } from './UserQueries';
-import { UserDocument, UserQueryTypes } from './types';
-import { MongoServerErrorCodes } from '../types';
+import { UserDocument, UserQueryTypes } from '../types';
+import { MongoServerErrorCodes } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 import { genSalt, hash } from 'bcrypt'
 
@@ -22,6 +22,18 @@ class UserService {
         name: 'HASHING_ERROR',
         message: 'Bcrypt failed to hash password during signup',
         stack: error,
+      })
+    }
+  }
+
+  async incrementRefreshToken(
+    username: string
+  ) {
+    let updated = await UserQuery.incRefreshToken({ username })
+    if (!updated) {
+      throw new Errors.DataError.UserError({
+        name: 'UNABLE_TO_UPDATE_USER_FIELD',
+        message: `Unable to icnrement refreshToken field for user with given username: ${username}`
       })
     }
   }

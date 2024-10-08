@@ -1,6 +1,6 @@
-import { Errors } from '../errors'
-import { UserModel } from '../../models/user';
-import { UserDocument, UserQueryTypes } from './types';
+import { Errors } from '../../errors'
+import { UserModel } from '../../../models/user';
+import { UserDocument, UserQueryTypes } from '../types';
 import { FilterQuery } from 'mongoose';
 
 class UserQueries {
@@ -28,25 +28,25 @@ class UserQueries {
         }
     }
 
-    private async queryByUsername(queryParams: {
+    private async username(queryParams: {
         username: string;
     }): Promise<UserDocument> {
         let { username } = queryParams
         return this.getQuery(
             { username },
-            this.getByUsername.name
+            this.username.name
         )
     }
 
-    private async getByEmail(queryParams: { email: string }): Promise<UserDocument> {
+    private async email(queryParams: { email: string }): Promise<UserDocument> {
         let { email } = queryParams
         return this.getQuery(
             { email },
-            this.getByEmail,
+            this.email,
         )
     }
 
-    private async getByEmailorUsername(queryParams: { email: string, username: string }): Promise<UserDocument> {
+    private async emailOrUsername(queryParams: { email: string, username: string }): Promise<UserDocument> {
         let { email, username } = queryParams
         return this.getQuery(
             {
@@ -55,7 +55,7 @@ class UserQueries {
                     { username }
                 ]
             },
-            this.getByEmailorUsername
+            this.emailOrUsername
         )
     }
 
@@ -63,7 +63,7 @@ class UserQueries {
         queryParams: { username: string }
     ): Promise<UserDocument> {
         let { username } = queryParams
-        let user = await this.queryByUsername({ username })
+        let user = await this.username({ username })
         if (!user) {
             throw new Errors.DataError.UserError({
                 name: 'USER_DOES_NOT_EXIST',
@@ -71,6 +71,17 @@ class UserQueries {
             })
         }
         return user
+    }
+
+    async incRefreshToken(
+        queryParams: { username: string }
+    ): Promise<boolean> {
+        let { username } = queryParams
+        let model = await UserModel.updateOne(
+            { username },
+            { $inc: { refreshToken: 1 } }
+        )
+        return model.acknowledged
     }
 }
 

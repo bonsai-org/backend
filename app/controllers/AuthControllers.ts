@@ -89,6 +89,21 @@ class AuthController {
         res.status(StatusCodes.OK).json({ username: req.username, profilePhoto: '' })
         return
     }
+
+    logout = async (
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) => {
+        try {
+            let { username } = req.body
+            await UserFunctions.incrementRefreshToken(username)
+            JWTFunctions.clearAuthTokens(res)
+            res.status(StatusCodes.RESET_CONTENT).json({ loggedOut: true })
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export const AuthControllers = new AuthController()

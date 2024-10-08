@@ -22,4 +22,10 @@ AuthRouter.get(
     AuthControllers.startUp,
 )
 
+AuthRouter.post(
+    '/logout',
+    JWTMiddleWare.authenticate,
+    AuthControllers.logout
+)
+
 export default AuthRouter

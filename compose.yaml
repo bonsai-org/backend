@@ -4,6 +4,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      FRONTEND_DEV_SEVER: "http://localhost:5173"
       MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
       PORT : "3000"
       NODE_ENV: "dev"
@@ -19,6 +20,6 @@ services:
     command: npm run dev
     
   mongodb:
-    image: "mongodb/mongodb-community-server:latest"
+    image: "mongo:latest"
     ports:
       - "27017:27017"

@@ -5,8 +5,7 @@ services:
       - "3000:3000"
       - "9229:9229"
     environment:
-      # Note that REFRESH_TOKEN_SECRET and ACCESS_TOKEN_SECRET are random values
-      # that are not used in production
+      FRONTEND_DEV_SEVER: "http://localhost:5173"
       MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
       PORT : "3000"
       NODE_ENV: "dev"
@@ -19,9 +18,9 @@ services:
           target: /app
     depends_on:
       - mongodb
-    command: npx nodemon --exec node --inspect=0.0.0.0:9229 -r ts-node/register ./src/bin/main.ts
-    
+    command: npx nodemon --exec node --inspect=0.0.0.0:9229 -r ts-node/register ./app/bin/main.ts
+  
   mongodb:
-    image: "mongodb/mongodb-community-server:latest"
+    image: "mongo:latest"
     ports:
       - "27017:27017"

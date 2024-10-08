@@ -2,20 +2,19 @@
   "name": "bonsai-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/bin/main.ts",
+  "main": "./app/bin/main.ts",
   "type": "commonjs",
   "engines": {
     "node": "20.16.0"
   },
   "scripts": {
     "test": "jest",
-    "dev": "npx nodemon ./src/bin/main.ts",
-    "dev2": "npx nodemon ./app/bin/main.ts",
-    "debug": "npx nodemon --exec node --inspect -r ts-node/register ./src/bin/main.ts",
+    "dev": "npx nodemon ./app/bin/main.ts",
+    "debug": "npx nodemon --exec node --inspect -r ts-node/register ./app/bin/main.ts",
     "clean": "rimraf dist",
     "prod": "npm run clean && npx tsc && node ./dist/bin/main.js",
-    "lint": "eslint ./src/**/**.ts ./tests/**/**.test.ts",
-    "make-pretty": "prettier --config .prettierrc './src/**/*.ts' './tests/**/*.ts' --write",
+    "lint": "eslint ./app/**/**.ts ./tests/**/**.test.ts",
+    "make-pretty": "prettier --config .prettierrc './app/**/*.ts' './tests/**/*.ts' --write",
     "build-and-run": "npx tsc && node ./dist/bin/main.js"
   },
   "repository": {

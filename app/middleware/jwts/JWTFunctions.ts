@@ -15,6 +15,15 @@ class JWTHelpers {
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
     } as const;
 
+    private clearCookieOpts = {
+        // remove maxAge field
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'prod',
+        sameSite: 'lax',
+        path: '/',
+        domain: process.env.NODE_ENV === 'prod' ? `.${process.env.DOMAIN}` : '',
+    } as const
+
     private createAuthTokens(user: UserDocument): NewlyGeneratedTokens {
         try {
             let refreshToken = jwt.sign(
@@ -124,8 +133,8 @@ class JWTHelpers {
     }
 
     clearAuthTokens(res: Response) {
-        res.clearCookie('id', this.cookieOpts)
-        res.clearCookie('rid', this.cookieOpts)
+        res.clearCookie('id', this.clearCookieOpts)
+        res.clearCookie('rid', this.clearCookieOpts)
     }
 }
 

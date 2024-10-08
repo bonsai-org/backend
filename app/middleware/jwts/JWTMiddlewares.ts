@@ -52,12 +52,6 @@ class JWTMiddlewares {
             let { username, user } = await JWTFunctions.verifyTokens(accessToken, refreshToken, res)
             if (!user) {
                 user = await UserQuery.getByUsername({ username })
-                if (!user) {
-                    throw new Errors.DataError.UserError({
-                        name: 'USER_DOES_NOT_EXIST',
-                        message: 'Failed to query user from JWT data'
-                    })
-                }
             }
             req.username = username
             req.user = user

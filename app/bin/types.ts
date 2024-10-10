@@ -5,6 +5,8 @@ export interface EnvironmentVariables {
     REFRESH_TOKEN_SECRET: string;
     ACCESS_TOKEN_SECRET: string;
     FRONTEND_DEV_SEVER?: string
+    ACCESS_KEY_ID: string,
+    SECRET_ACCESS_KEY: string
 }
 
 export enum MongooseEvents {

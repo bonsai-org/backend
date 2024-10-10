@@ -30,7 +30,9 @@ export const environmentVariables = Joi.object<EnvironmentVariables>({
     is: 'dev',
     then: Joi.required(),
     otherwise: Joi.optional(),
-  })
+  }),
+  ACCESS_KEY_ID: Joi.string().required(),
+  SECRET_ACCESS_KEY: Joi.string().required()
 }).unknown()
 
 

@@ -10,6 +10,8 @@ services:
       NODE_ENV: "dev"
       REFRESH_TOKEN_SECRET: "UYzCnj0exk8K3WIku4xrNbdFdiR0piRYSMMK1PI7ndSQ3DgIGgPjQcvI/KROFbB1CZD8V+5myqjYMXaGpHPlLg=="
       ACCESS_TOKEN_SECRET: "+gseK9cQ1TDN53RXNfKZrsTOyJoGcD9qK3Mx0VSdoc2jNygFPVHwuSrwWmns7IPiPT+1gwaV/FZ3O/GpevfwWg=="
+      ACCESS_KEY_ID: "${ACCESS_KEY_ID}"
+      SECRET_ACCESS_KEY: "${SECRET_ACCESS_KEY}"
     develop:
       watch:
         - action: sync

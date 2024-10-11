@@ -27,8 +27,9 @@ class UserService {
   }
 
   async incrementRefreshToken(
-    username: string
+    queryParams: { username: string }
   ) {
+    let { username } = queryParams
     let updated = await UserQuery.incRefreshToken({ username })
     if (!updated) {
       throw new Errors.DataError.UserError({

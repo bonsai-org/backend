@@ -12,7 +12,12 @@ class ValidationMiddleware {
     for (let key of Object.keys(req.body)) {
       let originalString = req.body[key] as string
       let cleanedString = DOMPurify.sanitize(req.body[key]) as string
-      if (originalString.length !== cleanedString.length) {
+      console.log(cleanedString, typeof originalString, typeof cleanedString)
+      if (
+        originalString.length !== cleanedString.length &&
+        typeof originalString === 'string' &&
+        typeof cleanedString === 'string'
+      ) {
         dirtyFields.push(key)
         console.log(cleanedString)
       }

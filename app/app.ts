@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { StatusCodes } from 'http-status-codes'
-import AuthRouter from './routers/AuthRouter'
+import ApiRouter from './routers/ApiRouter'
 
 const app = express()
 app.use(cookieParser())
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'dev') {
     )
 }
 
-app.use('/api', AuthRouter)
+app.use('/api', ApiRouter)
 
 app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (

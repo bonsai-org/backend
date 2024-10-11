@@ -62,6 +62,7 @@ class AuthController {
             }
             JWTFunctions.sendAuthTokens(res, user)
             res.status(StatusCodes.OK).json({ username, profilePhoto: '' })
+            return
         } catch (error) {
             if (error instanceof Errors.DataError.UserError) {
                 if (error.name === 'USER_DOES_NOT_EXIST') {
@@ -97,9 +98,10 @@ class AuthController {
     ) => {
         try {
             let { username } = req.body
-            await UserFunctions.incrementRefreshToken(username)
+            await UserFunctions.incrementRefreshToken({ username })
             JWTFunctions.clearAuthTokens(res)
             res.status(StatusCodes.RESET_CONTENT).json({ loggedOut: true })
+            return
         } catch (error) {
             next(error)
         }

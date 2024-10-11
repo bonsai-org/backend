@@ -16,16 +16,16 @@ AuthRouter.post(
     AuthControllers.login
 )
 
-AuthRouter.get(
-    '/startup',
-    JWTMiddleWare.authenticateWithUser,
-    AuthControllers.startUp,
-)
-
 AuthRouter.post(
     '/logout',
     JWTMiddleWare.authenticate,
     AuthControllers.logout
+)
+
+AuthRouter.get(
+    '/startup',
+    JWTMiddleWare.authenticateWithUser,
+    AuthControllers.startUp,
 )
 
 export default AuthRouter

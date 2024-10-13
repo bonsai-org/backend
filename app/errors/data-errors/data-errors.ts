@@ -24,3 +24,5 @@ export class DataError<T extends string> extends Error {
 }
 
 export { UserError, UserErrorNames } from './user'
+export { BonsaiError, BonsaiErrorNames } from './bonsai'
+export { BonsaiChapterError, BonsaiChapterErrorNames } from './bonsai-chapter'

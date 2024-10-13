@@ -1,11 +1,11 @@
-import { DataError, UserError, UserErrorNames } from './data-errors/data-errors'
-import { SystemError, DatabaseError, DatabaseErrorNames, EnvironmentError, EnvironmentErrorNames, UnknownException, UnknownExceptionNames } from './system-errors/system-error'
+import { BonsaiError, DataError, UserError, UserErrorNames, BonsaiErrorNames, BonsaiChapterError, BonsaiChapterErrorNames } from './data-errors/data-errors'
+import { SystemError, DatabaseError, DatabaseErrorNames, EnvironmentError, EnvironmentErrorNames, UnknownException, UnknownExceptionNames, BullMQError, BullMQErrorNames } from './system-errors/system-error'
 import { ThirdPartyError, BcryptError, BcryptErrorNames, JWTError, JWTErrorNames } from './third-party-errors/third-party-error'
 
 export const Errors = {
     ParentErrors: { DataError, SystemError, ThirdPartyError },
-    DataError: { UserError },
-    SystemError: { DatabaseError, EnvironmentError, UnknownException },
+    DataError: { UserError, BonsaiError, BonsaiChapterError },
+    SystemError: { DatabaseError, EnvironmentError, UnknownException, BullMQError },
     ThirdPartyError: { BcryptError, JWTError }
 }
 
@@ -14,4 +14,14 @@ export {
     MongoServerErrorCodes
 } from './types'
 
-export { UserErrorNames, DatabaseErrorNames, BcryptErrorNames, EnvironmentErrorNames, UnknownExceptionNames, JWTErrorNames }
+export {
+    UserErrorNames,
+    DatabaseErrorNames,
+    BcryptErrorNames,
+    EnvironmentErrorNames,
+    UnknownExceptionNames,
+    JWTErrorNames,
+    BonsaiErrorNames,
+    BonsaiChapterErrorNames,
+    BullMQErrorNames
+}

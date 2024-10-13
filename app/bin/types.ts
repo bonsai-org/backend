@@ -1,5 +1,9 @@
 export interface EnvironmentVariables {
     MONGO_DB_STRING: string;
+    REDIS_HOST: string
+    REDIS_PORT: number
+    REDIS_PASSWORD?: string
+    S3_BUCKET: string,
     PORT: number;
     NODE_ENV: 'dev' | 'stage' | 'prod' | 'local';
     REFRESH_TOKEN_SECRET: string;

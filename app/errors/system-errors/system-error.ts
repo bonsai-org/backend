@@ -26,3 +26,4 @@ export class SystemError<T extends string> extends Error {
 export { DatabaseError, DatabaseErrorNames } from './database'
 export { EnvironmentError, EnvironmentErrorNames } from './environment'
 export { UnknownException, UnknownExceptionNames } from './uncaught-exception'
+export { BullMQError, BullMQErrorNames } from './bullmq'

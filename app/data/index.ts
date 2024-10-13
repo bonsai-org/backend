@@ -1,3 +1,5 @@
 export { UserFunctions } from './User/UserFunctions'
 export { UserQuery } from './User/UserQueries'
+export { BonsaiFunctions } from './Bonsai/BonsaiFunctions'
+export { BonsaiChapterFunctions } from './BonsaiChapters/BonsaiChapterFunctions'
 export { UserDocument, UserQueryType, UserQueryTypes } from './types'

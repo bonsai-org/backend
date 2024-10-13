@@ -1,4 +1,4 @@
-import { Types, Document } from 'mongoose';
+import { Types } from 'mongoose';
 
 export interface IUser {
     username: string;
@@ -12,26 +12,27 @@ export interface IUser {
 }
 
 export interface IBonsai {
-    user: Types.ObjectId;
+    user: string;
     bonsaiChapters: Types.ObjectId[];
     hardiness_zone: string;
-    height: number;
-    width: number;
-    nebari: number;
-    style: string;
+    height?: number;
+    width?: number;
+    nebari?: number;
+    style?: string;
     species: string;
+    geoLocation: string
+    privateHash: string,
+    publicHash: string,
+    uploaded: boolean,
+    photoNames: string[]
 }
 
 export interface IBonsaiChapter {
-    photoUrls: string[];
     bonsai: Types.ObjectId;
     date: Date;
     caption: string;
-}
-
-export type MDBDocument<T> = T | null
-
-export type DocumentQuery<T> = {
-    data: T | null
-    error: unknown
+    sequencePosition: number
+    photoName: string,
+    bonsaiPrivateHash: string,
+    bonsaiPublicHash: string
 }

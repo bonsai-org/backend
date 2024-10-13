@@ -6,6 +6,9 @@ services:
     environment:
       FRONTEND_DEV_SEVER: "http://localhost:5173"
       MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      S3_BUCKET: "bonsai-org"
       PORT : "3000"
       NODE_ENV: "dev"
       REFRESH_TOKEN_SECRET: "UYzCnj0exk8K3WIku4xrNbdFdiR0piRYSMMK1PI7ndSQ3DgIGgPjQcvI/KROFbB1CZD8V+5myqjYMXaGpHPlLg=="
@@ -25,3 +28,8 @@ services:
     image: "mongo:latest"
     ports:
       - "27017:27017"
+  
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"

@@ -12,6 +12,25 @@ export type LoginRequest = {
     password: string;
 };
 
+export type NewBonsaiRequest = {
+    hardinessZone: string,
+    height?: number,
+    width?: number,
+    nebari?: number,
+    style?: string,
+    species: string,
+    geoLocation: string,
+    chapters: BonsaiChapterMetadata[]
+}
+
+export type BonsaiChapterMetadata = {
+    fileSize: number,
+    sequencePosition: number,
+    date: Date,
+    caption: string,
+    fileType: 'image/jpeg'
+}
+
 export type Requests = {
     LoginRequest: LoginRequest,
     SignupRequest: SignUpRequest

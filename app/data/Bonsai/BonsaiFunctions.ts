@@ -59,7 +59,7 @@ class BonsaiService {
                 error &&
                 error.code === MongoServerErrorCodes.DuplicateKey
             ) {
-                throw new Errors.DataError.BonsaiError({
+                throw new Errors.DataError.BonsaiServicesError({
                     name: 'DUPLICATE_KEY',
                     message: `Attempted to create new bonsai with duplicate key: ${this.extractDuplicateKey(error)}`
                 })

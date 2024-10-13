@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { BonsaiFunctions, BonsaiChapterFunctions } from '../data'
 import { Schema } from 'mongoose'
-import { BonsaiQueue } from '../bin/bullmq'
+import { BonsaiJobs } from '../data'
 import { StatusCodes } from 'http-status-codes'
 
 class BonsaiController {
@@ -43,21 +43,16 @@ class BonsaiController {
                 BonsaiChapterFunctions.saveChapters(chapterModels),
                 BonsaiFunctions.saveBonsai(bonsai),
             ])
-            await BonsaiQueue.add(
-                bonsai.privateHash,
+            await BonsaiJobs.newBonsai(
                 {
-                    username: req.username,
-                    expectedPhotos: chapterModels.length
-                },
-                {
-                    delay: 120000,
-                    jobId: bonsai.privateHash
+                    bonsaiPublicHash: bonsai.publicHash,
+                    numPhotos: bonsai.photoNames.length
                 }
             )
             let signedUrls = await BonsaiChapterFunctions.generateLinks({
                 imageNames: bonsai.photoNames
             })
-            res.status(StatusCodes.OK).json({ signedUrls, privateHash: bonsai.privateHash })
+            res.status(StatusCodes.OK).json({ signedUrls, publichHash: bonsai.publicHash, bonsai, chapterModels })
             return
         } catch (error) {
             console.error(error)
@@ -69,7 +64,7 @@ class BonsaiController {
         // Save the bonsai and the chapters
         // add the bonsai job to the queue 
         // generate signed urls
-        // send the urls and the privatehash to the user 
+        // send the urls and the publichash to the user 
     }
 
     confirmUpload = async (
@@ -79,33 +74,12 @@ class BonsaiController {
     ) => {
         try {
             const { bonsaihash } = req.params
-            const job = await BonsaiQueue.getJob(bonsaihash);
-
-            if (!job) {
-                // Job not found
-                res.status(StatusCodes.NOT_FOUND).json({ error: 'Job not found' });
-                return;
-            }
-
-            // Get the current state of the job
-            const state = await job.getState();
-
-            if (state === 'delayed') {
-                // Promote the job to be processed immediately
-                await job.promote();
-
-                res.status(StatusCodes.OK).json({ message: 'Job promoted to be processed immediately.' });
-            } else if (state === 'waiting' || state === 'active') {
-                res.status(StatusCodes.OK).json({ message: 'Job is already in progress.' });
-            } else if (state === 'completed') {
-                res.status(StatusCodes.OK).json({ message: 'Job has already been processed.' });
-            } else if (state === 'failed') {
-                res.status(StatusCodes.OK).json({ message: 'Job has failed.' });
-            } else {
-                res.status(StatusCodes.OK).json({ message: `Job is in state: ${state}` });
-            }
+            await BonsaiJobs.promoteUploadJob({ bonsaiPublicHash: bonsaihash })
+            res.sendStatus(StatusCodes.NO_CONTENT)
+            return
         } catch (error) {
-
+            next(error)
+            return
         }
     }
 

@@ -1,11 +1,13 @@
 import { DataError } from './data-errors';
 
-export type BonsaiErrorNames =
+export type BonsaiServicesErrorNames =
     | 'WRITE_FAILED'
     | 'READ_FAILED'
     | 'DUPLICATE_KEY'
+    | 'BONSAI_DOES_NOT_EXIST'
+    | 'FAILED_TO_UPDATE_FIELD'
 
-export class BonsaiError extends DataError<BonsaiErrorNames> {
+export class BonsaiServicesError extends DataError<BonsaiServicesErrorNames> {
     duplicateKey?: string
 
     constructor({
@@ -14,7 +16,7 @@ export class BonsaiError extends DataError<BonsaiErrorNames> {
         stack,
         duplicateKey,
     }: {
-        name: BonsaiErrorNames;
+        name: BonsaiServicesErrorNames;
         message: string;
         stack?: any;
         duplicateKey?: string,

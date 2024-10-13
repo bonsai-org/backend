@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export interface IUser {
     username: string;
@@ -36,3 +37,15 @@ export interface IBonsaiChapter {
     bonsaiPrivateHash: string,
     bonsaiPublicHash: string
 }
+
+export type UserDocument = IUser & Document
+
+export type BonsaiDocument = IBonsai & Document
+
+export type BonsaiQueryType = BonsaiDocument | null
+
+export type BonsaiChapterDocument = IBonsaiChapter & Document
+
+export type BonsaiChapterQueryType = BonsaiChapterDocument | null
+
+export type UserQueryType = UserDocument | null

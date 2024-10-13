@@ -1,6 +1,6 @@
-import { Errors } from '../../errors'
-import { UserModel } from '../../../models/user';
-import { UserDocument, UserQueryTypes } from '../types';
+import { QueryErrors } from './errors'
+import { UserModel } from '../user';
+import { UserDocument } from '../types';
 import { FilterQuery } from 'mongoose';
 
 class UserQueries {
@@ -12,16 +12,16 @@ class UserQueries {
         try {
             let user = await UserModel.findOne(query)
             if (!user) {
-                throw new Errors.DataError.UserError({
-                    name: 'USER_DOES_NOT_EXIST',
+                throw new QueryErrors.UserQuery({
+                    name: 'USER_NOT_FOUND',
                     message: `User does not exist when executing ${methodName}`,
                 })
             }
             return user
         } catch (error) {
-            if (error instanceof Errors.DataError.UserError) { throw error }
-            throw new Errors.SystemError.DatabaseError({
-                name: 'READ_FAILED',
+            if (error instanceof QueryErrors.UserQuery) { throw error }
+            throw new QueryErrors.UncaughtError({
+                name: 'UNCAUGHT_ERROR',
                 message: `Read failed in User.${methodName}`,
                 stack: error,
             });
@@ -65,8 +65,8 @@ class UserQueries {
         let { username } = queryParams
         let user = await this.username({ username })
         if (!user) {
-            throw new Errors.DataError.UserError({
-                name: 'USER_DOES_NOT_EXIST',
+            throw new QueryErrors.UserQuery({
+                name: 'USER_NOT_FOUND',
                 message: `Failed to find user with given username ${username}`
             })
         }
@@ -77,11 +77,11 @@ class UserQueries {
         queryParams: { username: string }
     ): Promise<boolean> {
         let { username } = queryParams
-        let model = await UserModel.updateOne(
+        let writeResult = await UserModel.updateOne(
             { username },
             { $inc: { refreshToken: 1 } }
         )
-        return model.acknowledged
+        return writeResult.acknowledged
     }
 }
 

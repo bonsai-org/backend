@@ -1,4 +1,5 @@
-import { UserFunctions, UserQuery } from '../data'
+import { UserQuery } from '../../models/queries/UserQuery'
+import { UserFunctions } from '../data'
 import { Request, Response, NextFunction } from 'express'
 import { JWTFunctions } from '../middleware'
 import { StatusCodes } from 'http-status-codes'
@@ -26,7 +27,7 @@ class AuthController {
             res.status(StatusCodes.OK).json({ username, profilePhoto: '' })
             return
         } catch (error) {
-            if (error instanceof Errors.DataError.UserError) {
+            if (error instanceof Errors.DataError.UserServicesError) {
                 if (error.name === 'DUPLICATE_KEY' && error.duplicateKey) {
                     res.status(StatusCodes.CONFLICT).json({ duplicateKey: error.duplicateKey })
                     return
@@ -55,7 +56,7 @@ class AuthController {
             })
             let validPassword = await compare(password, user.password)
             if (!validPassword) {
-                throw new Errors.DataError.UserError({
+                throw new Errors.DataError.UserServicesError({
                     name: 'INVALID_CREDENTIAL',
                     message: `Invalid password supplied by ${username} at login`
                 })
@@ -64,7 +65,7 @@ class AuthController {
             res.status(StatusCodes.OK).json({ username, profilePhoto: '' })
             return
         } catch (error) {
-            if (error instanceof Errors.DataError.UserError) {
+            if (error instanceof Errors.DataError.UserServicesError) {
                 if (error.name === 'USER_DOES_NOT_EXIST') {
                     res.sendStatus(StatusCodes.NOT_FOUND)
                     return

@@ -1,13 +1,13 @@
 import { DataError } from './data-errors';
 
-export type UserErrorNames =
+export type UserServicesErrorNames =
     | 'USER_EXISTS'
     | 'USER_DOES_NOT_EXIST'
     | 'DUPLICATE_KEY'
     | 'INVALID_CREDENTIAL'
     | 'UNABLE_TO_UPDATE_USER_FIELD'
 
-export class UserError extends DataError<UserErrorNames> {
+export class UserServicesError extends DataError<UserServicesErrorNames> {
     duplicateKey?: string
 
     constructor({
@@ -16,7 +16,7 @@ export class UserError extends DataError<UserErrorNames> {
         stack,
         duplicateKey,
     }: {
-        name: UserErrorNames;
+        name: UserServicesErrorNames;
         message: string;
         stack?: any;
         duplicateKey?: string,

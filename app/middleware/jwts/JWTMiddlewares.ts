@@ -2,13 +2,13 @@ import { StatusCodes } from "http-status-codes"
 import { Errors } from "../../errors"
 import { JWTFunctions } from "./JWTFunctions"
 import { Request, Response, NextFunction } from 'express'
-import { UserQuery } from "../../data"
+import { UserQuery } from "../../../models/queries/UserQuery"
 
 class JWTMiddlewares {
     private getCookieValues(req: Request) {
         let { id, rid } = req.cookies
         if (!id && !rid) {
-            throw new Errors.DataError.UserError({
+            throw new Errors.DataError.UserServicesError({
                 name: 'INVALID_CREDENTIAL',
                 message: 'User did not supply an access token or a refresh token'
             })
@@ -29,7 +29,7 @@ class JWTMiddlewares {
             return
         } catch (error) {
             console.log(error)
-            if (error instanceof Errors.DataError.UserError) {
+            if (error instanceof Errors.DataError.UserServicesError) {
                 if (
                     error.name === 'USER_DOES_NOT_EXIST' ||
                     error.name === 'INVALID_CREDENTIAL'
@@ -58,7 +58,7 @@ class JWTMiddlewares {
             next()
             return
         } catch (error) {
-            if (error instanceof Errors.DataError.UserError) {
+            if (error instanceof Errors.DataError.UserServicesError) {
                 if (
                     error.name === 'USER_DOES_NOT_EXIST' ||
                     error.name === 'INVALID_CREDENTIAL'

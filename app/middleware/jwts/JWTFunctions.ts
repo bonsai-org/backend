@@ -1,6 +1,6 @@
-import { UserQuery } from "../../data";
+import { UserQuery } from "../../../models/queries/UserQuery";
 import { Errors } from "../../errors";
-import { UserDocument } from "../../types";
+import { UserDocument } from "../../../models/types";
 import { AccessTokenData, AuthorizedTokenData, NewlyGeneratedTokens, RefreshTokenData } from '../types'
 import { Response } from "express";
 import * as jwt from 'jsonwebtoken';
@@ -94,27 +94,27 @@ class JWTHelpers {
         let accessTokenData = this.verifyAccessToken(accessToken)
         if (accessTokenData) { return accessTokenData }
         if (!refreshToken) {
-            throw new Errors.DataError.UserError({
+            throw new Errors.DataError.UserServicesError({
                 name: 'INVALID_CREDENTIAL',
                 message: 'No refresh token provided'
             })
         }
         let refreshTokenData = this.verifyRefreshToken(refreshToken)
         if (!refreshTokenData) {
-            throw new Errors.DataError.UserError({
+            throw new Errors.DataError.UserServicesError({
                 name: 'INVALID_CREDENTIAL',
                 message: 'Failed to verify refresh token'
             })
         }
         let user = await UserQuery.getByUsername({ username: refreshTokenData.username })
         if (!user) {
-            throw new Errors.DataError.UserError({
+            throw new Errors.DataError.UserServicesError({
                 name: 'USER_DOES_NOT_EXIST',
                 message: 'Failed to lookup user from supplied JWT'
             })
         }
         else if (user.refreshToken !== refreshTokenData.refreshTokenVersion) {
-            throw new Errors.DataError.UserError({
+            throw new Errors.DataError.UserServicesError({
                 name: 'INVALID_CREDENTIAL',
                 message: 'User provided an expired JWT'
             })

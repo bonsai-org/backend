@@ -1,7 +1,7 @@
 import { Errors } from '../../errors'
 import { UserModel } from '../../../models/user';
-import { UserQuery } from './UserQueries';
-import { UserDocument, UserQueryTypes } from '../types';
+import { UserQuery } from '../../../models/queries/UserQuery';
+import { UserDocument } from '../types';
 import { MongoServerErrorCodes } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 import { genSalt, hash } from 'bcrypt'
@@ -32,7 +32,7 @@ class UserService {
     let { username } = queryParams
     let updated = await UserQuery.incRefreshToken({ username })
     if (!updated) {
-      throw new Errors.DataError.UserError({
+      throw new Errors.DataError.UserServicesError({
         name: 'UNABLE_TO_UPDATE_USER_FIELD',
         message: `Unable to icnrement refreshToken field for user with given username: ${username}`
       })
@@ -59,7 +59,7 @@ class UserService {
       if (
         error.code === MongoServerErrorCodes.DuplicateKey
       ) {
-        throw new Errors.DataError.UserError({
+        throw new Errors.DataError.UserServicesError({
           name: 'DUPLICATE_KEY',
           message: `Attempted to create user with duplicate field: ${this.extractDuplicateKey(error)}`,
           duplicateKey: this.extractDuplicateKey(error)

@@ -56,7 +56,7 @@ class BonsaiController {
             ])
             let signedUrls = results[results.length - 1]
             await session.commitTransaction()
-            res.status(StatusCodes.OK).json({ signedUrls, publichHash: bonsai.publicHash })
+            res.status(StatusCodes.OK).json({ signedUrls, publicHash: bonsai.publicHash })
             return
         } catch (error) {
             await session.abortTransaction()

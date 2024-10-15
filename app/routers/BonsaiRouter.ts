@@ -4,16 +4,16 @@ import { BonsaiControllers } from '../controllers/BonsaiController'
 
 const BonsaiRouter = Router()
 
-BonsaiRouter.get('/', (req, res) => {
-    res.send('got it')
-})
-
 BonsaiRouter.post(
     '/create',
     JWTMiddleWare.authenticate,
     ValidationMiddlewares.processFormData(ValidationChains.createBonsai),
     BonsaiControllers.create
 )
+
+// this probably needs some authentication to happen here
+// also, want †o make sure that this only gets called once 
+// for every bonsai 
 
 BonsaiRouter.put(
     '/create/confirm/:bonsaihash',

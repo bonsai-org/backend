@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { BonsaiFunctions, BonsaiChapterFunctions } from '../data'
-import { Schema } from 'mongoose'
+import { Schema, startSession } from 'mongoose'
 import { BonsaiJobs } from '../data'
 import { StatusCodes } from 'http-status-codes'
 
@@ -11,7 +11,9 @@ class BonsaiController {
         res: Response,
         next: NextFunction
     ) => {
+        const session = await startSession();
         try {
+            session.startTransaction();
             let {
                 hardinessZone,
                 height,
@@ -39,32 +41,27 @@ class BonsaiController {
                 bonsaiPublicHash: bonsai.publicHash,
             })
             BonsaiFunctions.addPhotoNames({ bonsai, bonsaiChapters: chapterModels })
-            await Promise.all([
+            const results = await Promise.all([
                 BonsaiChapterFunctions.saveChapters(chapterModels),
                 BonsaiFunctions.saveBonsai(bonsai),
+                BonsaiJobs.newBonsai(
+                    {
+                        bonsaiPublicHash: bonsai.publicHash,
+                        numPhotos: bonsai.photoNames.length
+                    }
+                ),
+                BonsaiChapterFunctions.generateLinks({
+                    imageNames: bonsai.photoNames
+                })
             ])
-            await BonsaiJobs.newBonsai(
-                {
-                    bonsaiPublicHash: bonsai.publicHash,
-                    numPhotos: bonsai.photoNames.length
-                }
-            )
-            let signedUrls = await BonsaiChapterFunctions.generateLinks({
-                imageNames: bonsai.photoNames
-            })
-            res.status(StatusCodes.OK).json({ signedUrls, publichHash: bonsai.publicHash, bonsai, chapterModels })
+            let signedUrls = results[results.length - 1]
+            await session.commitTransaction()
+            res.status(StatusCodes.OK).json({ signedUrls, publichHash: bonsai.publicHash })
             return
         } catch (error) {
-            console.error(error)
-            res.sendStatus(500)
+            await session.abortTransaction()
+            next(error)
         }
-        // construct a bonsai from user input 
-        // construct chapter models from user input 
-        // append photo names of each chapter in S3 to bonsai 
-        // Save the bonsai and the chapters
-        // add the bonsai job to the queue 
-        // generate signed urls
-        // send the urls and the publichash to the user 
     }
 
     confirmUpload = async (

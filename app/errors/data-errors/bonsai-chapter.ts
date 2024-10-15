@@ -1,9 +1,7 @@
 import { DataError } from './data-errors';
 
 export type BonsaiChapterServicesErrorNames =
-    | 'WRITE_FAILED'
-    | 'READ_FAILED'
-    | 'DUPLICATE_KEY'
+    | 'FAILED_TO_GENERATE_LINKS'
 
 export class BonsaiChapterServicesError extends DataError<BonsaiChapterServicesErrorNames> {
     duplicateKey?: string

@@ -1,6 +1,7 @@
 import { Queue, QueueOptions } from 'bullmq';
 import { RedisOptions } from 'ioredis';
 import { Errors } from '../../errors';
+import mongoose from 'mongoose';
 
 let redisOptions: RedisOptions = {
     host: process.env.REDIS_HOST,
@@ -25,7 +26,7 @@ class BonsaiQueue extends Queue {
                 { expectedPhotos: params.numPhotos },
                 {
                     jobId: params.bonsaiPublicHash,
-                    delay: process.env.NODE_ENV === 'prod' ? 120000 : 2000,
+                    delay: 20000
                 },
             )
         } catch (error) {

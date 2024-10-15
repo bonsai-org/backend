@@ -42,8 +42,24 @@ class BonsaiChapterService {
         return bonsaiChapters
     }
 
+    async saveChapters(
+        chapters: BonsaiChapterDocument[],
+    ): Promise<void> {
+        try {
+            await Promise.all(chapters.map((chapter) => {
+                return chapter.save()
+            }))
+        } catch (error) {
+            throw new Errors.SystemError.DatabaseError({
+                name: 'WRITE_FAILED',
+                message: `Failed to save new chapters to MongoDB`,
+                stack: error,
+            })
+        }
+    }
+
     async generateLinks(queryParams: {
-        imageNames: string[]
+        imageNames: string[],
     }) {
         try {
             let signedUrls = await Promise.all(
@@ -61,18 +77,11 @@ class BonsaiChapterService {
             )
             return signedUrls
         } catch (error) {
-            throw new Error('failed to sign the urls')
-        }
-    }
-
-    async saveChapters(chapters: BonsaiChapterDocument[]): Promise<boolean> {
-        try {
-            await Promise.all(chapters.map((chapter) => {
-                return chapter.save()
-            }))
-            return true
-        } catch (error) {
-            return false
+            throw new Errors.DataError.BonsaiChapterServicesError({
+                name: 'FAILED_TO_GENERATE_LINKS',
+                message: `Failed to generate uploadable S3 links for client`,
+                stack: error,
+            })
         }
     }
 }

@@ -2,6 +2,7 @@ import { BonsaiModel } from '../../../models/bonsai'
 import { v4 as uuidv4 } from 'uuid';
 import { BonsaiChapterDocument, BonsaiDocument } from '../types';
 import { Errors, MongoServerErrorCodes } from '../../errors';
+import mongoose from 'mongoose';
 
 class BonsaiService {
 
@@ -49,10 +50,11 @@ class BonsaiService {
         return params.bonsai
     }
 
-    async saveBonsai(bonsai: BonsaiDocument): Promise<BonsaiDocument> {
+    async saveBonsai(
+        bonsai: BonsaiDocument,
+    ): Promise<BonsaiDocument> {
         try {
             await bonsai.save()
-            console.log(bonsai)
             return bonsai
         } catch (error: any) {
             if (

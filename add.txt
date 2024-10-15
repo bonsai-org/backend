@@ -1,0 +1,3 @@
+Need to handle errors express catch all
+
+Most likely will need to implement types into express.d.ts in order to remove internal api error 

@@ -4,21 +4,32 @@ services:
     ports:
       - "3000:3000"
     environment:
+      FRONTEND_DEV_SEVER: "http://localhost:5173"
       MONGO_DB_STRING : "mongodb://mongodb:27017/bonsai-dev-database"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      S3_BUCKET: "bonsai-org"
       PORT : "3000"
       NODE_ENV: "dev"
       REFRESH_TOKEN_SECRET: "UYzCnj0exk8K3WIku4xrNbdFdiR0piRYSMMK1PI7ndSQ3DgIGgPjQcvI/KROFbB1CZD8V+5myqjYMXaGpHPlLg=="
       ACCESS_TOKEN_SECRET: "+gseK9cQ1TDN53RXNfKZrsTOyJoGcD9qK3Mx0VSdoc2jNygFPVHwuSrwWmns7IPiPT+1gwaV/FZ3O/GpevfwWg=="
+      ACCESS_KEY_ID: "${ACCESS_KEY_ID}"
+      SECRET_ACCESS_KEY: "${SECRET_ACCESS_KEY}"
     develop:
       watch:
         - action: sync
-          path: ./src
-          target: /app/src
+          path: .
+          target: /app
     depends_on:
       - mongodb
     command: npm run dev
     
   mongodb:
-    image: "mongodb/mongodb-community-server:latest"
+    image: "mongo:latest"
     ports:
       - "27017:27017"
+  
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"

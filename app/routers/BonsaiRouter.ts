@@ -7,8 +7,13 @@ const BonsaiRouter = Router()
 BonsaiRouter.post(
     '/create',
     JWTMiddleWare.authenticate,
-    ValidationMiddlewares.processFormData(ValidationChains.createBonsai),
+    // ValidationMiddlewares.processFormData(ValidationChains.createBonsai),
     BonsaiControllers.create
+)
+
+BonsaiRouter.get(
+    '/gib',
+    BonsaiControllers.gib
 )
 
 // this probably needs some authentication to happen here

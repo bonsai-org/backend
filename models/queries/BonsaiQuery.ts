@@ -54,6 +54,11 @@ class BonsaiQueries {
 
     }
 
+    async getAtMost10() {
+        let bonsai = await BonsaiModel.find().limit(10)
+        return bonsai
+    }
+
 }
 
 export const BonsaiQuery = new BonsaiQueries()

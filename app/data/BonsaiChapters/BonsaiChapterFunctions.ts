@@ -6,22 +6,48 @@ import { S3Client } from '../../bin/s3'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import mongoose from 'mongoose'
+import { v4 as uuidv4 } from 'uuid'
 
 class BonsaiChapterService {
+    // constructChapter(params: {
+    //     chapterMetadata: BonsaiChapterMetadata,
+    //     bonsaiID: mongoose.Schema.Types.ObjectId,
+    //     bonsaiPrivateHash: string,
+    //     bonsaiPublicHash: string
+    // }): BonsaiChapterDocument {
+    //     return new BonsaiChapterModel({
+    //         bonsai: params.bonsaiID,
+    //         date: params.chapterMetadata.date,
+    //         caption: params.chapterMetadata.caption,
+    //         sequencePosition: params.chapterMetadata.sequencePosition,
+    //         bonsaiPrivateHash: params.bonsaiPrivateHash,
+    //         bonsaiPublicHash: params.bonsaiPublicHash,
+    //         photoName: params.bonsaiPrivateHash + '/' + params.chapterMetadata.sequencePosition
+    //     })
+    // }
+
     constructChapter(params: {
         chapterMetadata: BonsaiChapterMetadata,
         bonsaiID: mongoose.Schema.Types.ObjectId,
         bonsaiPrivateHash: string,
         bonsaiPublicHash: string
     }): BonsaiChapterDocument {
+        let chapterPrivateHash = uuidv4()
+        let chapterPublicHash = uuidv4()
+        let photoNames = params.chapterMetadata.photos.map((photo) => {
+            return (
+                `${params.bonsaiPrivateHash}/${chapterPrivateHash}/${photo.photoOrder}`
+            )
+        })
         return new BonsaiChapterModel({
             bonsai: params.bonsaiID,
             date: params.chapterMetadata.date,
             caption: params.chapterMetadata.caption,
-            sequencePosition: params.chapterMetadata.sequencePosition,
             bonsaiPrivateHash: params.bonsaiPrivateHash,
             bonsaiPublicHash: params.bonsaiPublicHash,
-            photoName: params.bonsaiPrivateHash + '/' + params.chapterMetadata.sequencePosition
+            bonsaiChapterPrivateHash: chapterPrivateHash,
+            bonsaiChapterPublicHash: chapterPublicHash,
+            photoNames,
         })
     }
 
@@ -59,23 +85,28 @@ class BonsaiChapterService {
     }
 
     async generateLinks(queryParams: {
-        imageNames: string[],
+        chapters: BonsaiChapterDocument[]
     }) {
         try {
-            let signedUrls = await Promise.all(
-                queryParams.imageNames.map((imageName) => {
-                    return getSignedUrl(
-                        S3Client,
-                        new PutObjectCommand({
-                            Bucket: process.env.S3_BUCKET,
-                            Key: imageName,
-                            ContentType: 'image/jpeg',
-                        }),
-                        { expiresIn: 30 }
+            let signedURLs = await Promise.all(
+                queryParams.chapters.map(async (chapter) => {
+                    let links = await Promise.all(
+                        chapter.photoNames.map((photoName) => {
+                            return getSignedUrl(
+                                S3Client,
+                                new PutObjectCommand({
+                                    Bucket: process.env.S3_BUCKET,
+                                    Key: photoName,
+                                    ContentType: 'image/jpeg',
+                                }),
+                                { expiresIn: 30 }
+                            )
+                        })
                     )
+                    return links
                 })
             )
-            return signedUrls
+            return signedURLs.flat()
         } catch (error) {
             throw new Errors.DataError.BonsaiChapterServicesError({
                 name: 'FAILED_TO_GENERATE_LINKS',

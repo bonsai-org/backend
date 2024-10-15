@@ -38,17 +38,17 @@ class BonsaiService {
         return bonsai
     }
 
-    addPhotoNames(
-        params: {
-            bonsai: BonsaiDocument,
-            bonsaiChapters: BonsaiChapterDocument[],
-        }
-    ): BonsaiDocument {
-        params.bonsai.photoNames = params.bonsaiChapters.map((chapter) => {
-            return chapter.photoName
-        })
-        return params.bonsai
-    }
+    // addPhotoNames(
+    //     params: {
+    //         bonsai: BonsaiDocument,
+    //         bonsaiChapters: BonsaiChapterDocument[],
+    //     }
+    // ): BonsaiDocument {
+    //     params.bonsai.photoNames = params.bonsaiChapters.map((chapter) => {
+    //         return chapter.photoName
+    //     })
+    //     return params.bonsai
+    // }
 
     async saveBonsai(
         bonsai: BonsaiDocument,

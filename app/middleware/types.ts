@@ -24,11 +24,15 @@ export type NewBonsaiRequest = {
 }
 
 export type BonsaiChapterMetadata = {
-    fileSize: number,
-    sequencePosition: number,
     date: Date,
     caption: string,
-    fileType: 'image/jpeg'
+    photos: BonsaiChapterPhoto[]
+}
+
+
+export type BonsaiChapterPhoto {
+    fileType: 'image/jpeg',
+    photoOrder: number,
 }
 
 export type Requests = {

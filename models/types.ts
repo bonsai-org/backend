@@ -25,17 +25,17 @@ export interface IBonsai {
     privateHash: string,
     publicHash: string,
     uploaded: boolean,
-    photoNames: string[]
 }
 
 export interface IBonsaiChapter {
     bonsai: Types.ObjectId;
     date: Date;
     caption: string;
-    sequencePosition: number
-    photoName: string,
     bonsaiPrivateHash: string,
-    bonsaiPublicHash: string
+    bonsaiPublicHash: string,
+    bonsaiChapterPrivateHash: string
+    bonsaiChapterPublicHash: string
+    photoNames: string[]
 }
 
 export type UserDocument = IUser & Document

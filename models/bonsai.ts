@@ -3,16 +3,6 @@ import { IBonsai } from './types';
 
 const BonsaiSchema = new Schema<IBonsai>(
   {
-    photoNames: {
-      type: [{ type: Schema.Types.String, required: true }],
-      required: true,
-      validate: {
-        validator: function (v) {
-          return v != null && v.length > 0;
-        },
-        message: 'Bonsai photoNames array must have at least one element'
-      }
-    },
     user: { type: Schema.Types.String, required: true },
     bonsaiChapters: [
       { type: Schema.Types.ObjectId, ref: 'BonsaiChapter', required: true },

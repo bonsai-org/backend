@@ -21,15 +21,15 @@ import {
 
 class ValidationChain {
 
-    private chapterMetadata = Joi.array().items(
-        Joi.object<BonsaiChapterMetadata>({
-            fileSize,
-            sequencePosition,
-            date,
-            caption,
-            fileType
-        })
-    ).required()
+    // private chapterMetadata = Joi.array().items(
+    //     Joi.object<BonsaiChapterMetadata>({
+    //         fileSize,
+    //         sequencePosition,
+    //         date,
+    //         caption,
+    //         fileType
+    //     })
+    // ).required()
 
     signup = Joi.object<SignUpRequest>({
         username,
@@ -43,16 +43,16 @@ class ValidationChain {
         password,
     }).unknown();
 
-    createBonsai = Joi.object<NewBonsaiRequest>({
-        hardinessZone,
-        height,
-        width,
-        nebari,
-        style,
-        species,
-        geoLocation,
-        chapters: this.chapterMetadata
-    }).unknown()
+    // createBonsai = Joi.object<NewBonsaiRequest>({
+    //     hardinessZone,
+    //     height,
+    //     width,
+    //     nebari,
+    //     style,
+    //     species,
+    //     geoLocation,
+    //     chapters: this.chapterMetadata
+    // }).unknown()
 
 }
 

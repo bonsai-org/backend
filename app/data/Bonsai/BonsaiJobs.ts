@@ -17,13 +17,11 @@ class BonsaiQueue extends Queue {
     async newBonsai(
         params: {
             bonsaiPublicHash: string,
-            numPhotos: number,
         }
     ): Promise<void> {
         try {
             await this.add(
                 'newBonsaiUpload',
-                { expectedPhotos: params.numPhotos },
                 {
                     jobId: params.bonsaiPublicHash,
                     delay: 20000
